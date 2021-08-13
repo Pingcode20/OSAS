@@ -35,6 +35,7 @@ class Ship:
             'speed': 0,
             'jump': 0,
             'hull': 1,
+            'current hull': 0,
             'slots': '',
             'aegis': 0,
             'targeting order': []
@@ -83,15 +84,17 @@ class Ship:
 
     # Parse modules for any special effects like AEGIS
     def parse_special_modules(self, modules: str):
+        # Current Hull
+        self.stats['current hull'] = self.stats['current hull'] or self.stats['hull']
 
         # AEGIS
         match_aegis = re.match(r'.*AEGIS x(\d+).*', modules, re.IGNORECASE)
         if match_aegis:
-            self.stats['aegis'] = match_aegis.groups()[0]
+            self.stats['aegis'] = self.stats['aegis'] or match_aegis.groups()[0]
 
         # Cruiser Targeting
         if re.match(r'.*cruiser targeting.*', modules, re.IGNORECASE):
-            self.stats['targeting order'] = targeting_orders['Cruiser Targeting']
+            self.stats['targeting order'] = self.stats['targeting order'] or targeting_orders['Cruiser Targeting']
 
     # Prepare derived stats
     def prepare_derived_stats(self):
@@ -121,7 +124,7 @@ class Ship:
             else:
                 stat_string = str(stats[stat]).strip()
 
-            stat_strings.append(stat.capitalize() + ': ' + stat_string)
+            stat_strings.append(stat.title() + ': ' + stat_string)
 
         return f"%s [%s]\n" % (self.class_name, self.hull_fulltypename) + \
                '\n'.join(stat_strings)
@@ -134,7 +137,8 @@ class Ship:
 
 class Fleet:
     fleet_name = ''
-    fleet_ships = []
+    ships = []
+    ship_instances = []
 
     fleet_filename = ''
 
@@ -146,7 +150,7 @@ class Fleet:
         self.fleet_filename = fleet_filename
 
         # Open OOB
-        filename = os.path.join(OOB_DIR,fleet_filename)
+        filename = os.path.join(OOB_DIR, fleet_filename)
         f = open(filename, 'r')
         oob_raw = f.read()
         f.close()
@@ -161,7 +165,10 @@ class Fleet:
             ship.parse_statblock(statblock)
             ships.append(ship)
 
-        self.fleet_ships = ships
+        self.ships = ships
 
     def generate_fleet_oob(self):
-        return self.fleet_name + '\n\n' + '\n\n'.join([ship.generate_statblock() for ship in self.fleet_ships])
+        return self.fleet_name + '\n\n' + '\n\n'.join([ship.generate_statblock() for ship in self.ships])
+
+    def generate_fleet_summary(self):
+        return self.fleet_name + '\n\n' + '\n'.join([ship.generate_summary() for ship in self.ships])
