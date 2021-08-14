@@ -1,0 +1,43 @@
+Supercarrier Fleet
+
+Goby-class Heavy Cutter [Drone]
+Quantity: 39 [1170 IC]
+Attack [Starship]: 3/0/0/0
+Attack [Drone]: 3/0/0/0
+Defense: 7
+Saturation: 3
+Speed: 8
+Jump: 0
+Hull: 2
+Slots: 2 [Heavy Screens]
+
+Frigatebird-class Heavy Bomber [Drone]
+Quantity: 39 [1170 IC]
+Attack [Starship]: 14/0/0/0
+Attack [Drone]: 0/0/0/0
+Defense: 3
+Saturation: 1
+Speed: 8
+Jump: 0
+Hull: 2
+Slots: 2 [SRM Launcher x2]
+
+Skipjack-class [Destroyer]
+Quantity: 7 [1197 IC]
+Attack: 10/7/5/3
+Defense: 9
+Saturation: 3
+Speed: 8
+Jump: 5
+Hull: 2
+Slots: 3 [Missiles x1, AEGIS x1, Heavy Screens x1]
+
+Echidna-class [Capital]
+Quantity: 3 [2475 IC]
+Attack: 16/14/12/10
+Defense: 16
+Saturation: 9
+Speed: 5
+Jump: 5
+Hull: 12
+Slots: 8 [Fleet Carrier Drone Bay x1, Capital Drone Bay x1]

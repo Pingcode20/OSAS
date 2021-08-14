@@ -1,0 +1,41 @@
+Balanced A-TAC Fleet
+
+Amphitrite-class [Capital]
+Quantity: 2 [1702 IC]
+Attack: 34/28/22/10
+Defense: 30
+Saturation: 11
+Speed: 5
+Jump: 5
+Hull: 12
+Slots: 8 [Cap Pods x2 Cap Screens x2]
+
+Marlin-class [Cruiser]
+Quantity: 5 [1500 IC]
+Attack: 27/21/15/9
+Defense: 9
+Saturation: 4
+Speed: 5
+Jump: 5
+Hull: 3
+Slots: 4 [Cap Pods x2]
+
+Archerfish-class [Cruiser]
+Quantity: 1 [312 IC]
+Attack: 9/7/4/3
+Defense: 9
+Saturation: 6
+Speed: 5
+Jump: 5
+Hull: 3
+Slots: 4 [Aegis x4]
+
+Skipjack-class [Destroyer]
+Quantity: 7 [1191 IC]
+Attack: 9/7/4/3
+Defense: 9
+Saturation: 3
+Speed: 8
+Jump: 5
+Hull: 2
+Slots: 3 [Missiles, Screens, Aegis]
