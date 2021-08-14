@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import re
 import numpy
+import itertools
 from definitions import OOB_DIR
 
 targeting_orders = {
@@ -21,7 +22,7 @@ class Ship:
     class_name = ''
     hull_type = ''
     hull_subtype = ''
-    hull_fulltypename = ''
+    hull_full_type = ''
 
     # Meta-stats
     combat_value = 0
@@ -35,7 +36,7 @@ class Ship:
             'speed': 0,
             'jump': 0,
             'hull': 1,
-            'current hull': 0,
+            'current hull': [],
             'slots': '',
             'aegis': 0,
             'targeting order': []
@@ -51,9 +52,9 @@ class Ship:
         self.hull_subtype = match[2] or match[1]
 
         if self.hull_type == self.hull_subtype:
-            self.hull_fulltypename = self.hull_type
+            self.hull_full_type = self.hull_type
         else:
-            self.hull_fulltypename = self.hull_type + '-' + self.hull_subtype
+            self.hull_full_type = self.hull_type + '-' + self.hull_subtype
 
         for stat in stats[1:]:
             k, val = list(map(str.strip, stat.split(':', maxsplit=1)))
@@ -72,6 +73,13 @@ class Ship:
                 self.stats[key] = val
             elif key == 'targeting order':
                 self.stats['targeting order'] = list(map(str.strip, val.split(',')))
+            elif key == 'current hull':
+                hulls = list(map(str.strip, val.split(',')))
+                current_hulls = []
+                for hull_record in hulls:
+                    count, hull = re.match(r'(\d+)x\s*(\d+)', hull_record).groups()
+                    current_hulls.extend([int(hull)] * int(count))
+                self.stats['current hull'] = current_hulls
             elif val.isnumeric():
                 self.stats[key] = int(val)
             else:
@@ -80,13 +88,15 @@ class Ship:
             if len(self.stats['targeting order']) == 0:
                 self.stats['targeting order'] = targeting_orders[self.hull_subtype]
 
+        # Fill in extra hulls at full strength if quantity is higher than specified
+        if len(self.stats['current hull']) < self.stats['quantity']:
+            self.stats['current hull'].extend(
+                [self.stats['hull']] * (self.stats['quantity'] - len(self.stats['current hull'])))
+
         self.prepare_derived_stats()
 
     # Parse modules for any special effects like AEGIS
     def parse_special_modules(self, modules: str):
-        # Current Hull
-        self.stats['current hull'] = self.stats['current hull'] or self.stats['hull']
-
         # AEGIS
         match_aegis = re.match(r'.*AEGIS x(\d+).*', modules, re.IGNORECASE)
         if match_aegis:
@@ -98,6 +108,9 @@ class Ship:
 
     # Prepare derived stats
     def prepare_derived_stats(self):
+        # Update quantity to agree with current hull
+        self.stats['quantity'] = len(self.stats['current hull'])
+
         # Rough power estimate based on starship attack + defence
         scaled_general_attack = [x ** 2 for x in self.stats['attack'][default_attack_type]]
         scaled_defence = self.stats['defense'] ** 2
@@ -119,6 +132,10 @@ class Ship:
                         stat_string = "/".join(map(str, stats[stat][attack_type]))
                         stat_strings.append('Attack [' + attack_type.capitalize() + ']: ' + stat_string)
                 continue
+            elif stat == 'current hull':
+                hull_counter = collections.Counter(stats[stat])
+
+                stat_string = ', '.join([str(hull_counter[hull]) + 'x ' + str(hull) for hull in hull_counter])
             elif stat == 'targeting order':
                 stat_string = ", ".join(map(str, stats[stat]))
             else:
@@ -126,11 +143,11 @@ class Ship:
 
             stat_strings.append(stat.title() + ': ' + stat_string)
 
-        return f"%s [%s]\n" % (self.class_name, self.hull_fulltypename) + \
+        return f"%s [%s]\n" % (self.class_name, self.hull_full_type) + \
                '\n'.join(stat_strings)
 
     def generate_summary(self):
-        return self.class_name + ' [' + self.hull_fulltypename + '] x' + str(self.stats['quantity']) + \
+        return self.class_name + ' [' + self.hull_full_type + '] x' + str(self.stats['quantity']) + \
                ' - ' + str(self.combat_value * self.stats['quantity']) + \
                ' power rating (' + str(self.combat_value) + ' ea.)'
 

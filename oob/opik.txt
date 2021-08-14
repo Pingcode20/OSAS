@@ -1,0 +1,507 @@
+
+OPIK Primary Battlegroup
+
+TAC Bahamut-A class Dreadnought [Capital]
+Quantity: 2 [2726 IC]
+Attack: 56/53/50/47
+Defense: 46
+Saturation: 10
+Speed: 5
+Jump: 4
+Hull: 15
+Slots: 11 [Flatpack Pods x4, Beam Batteries x1, Shield Generator x1 | Prototype Warships, Modular 3, PD 1, Weapons 3, Defences 4, Neutronium III, High Performance Ships, AI Core]
+
+TAC Bluefin class Destroyer [Destroyer]
+Quantity: 12 [2916 IC]
+Attack: 9/9/9/9
+Defense: 13
+Saturation: 3
+Speed: 8
+Jump: 4
+Hull: 5
+Slots: 5 [LRMs, AEGIS x3, Improved Bulkheads x3 | Prototype Warships, Modular 3, PD 2, Weapons 3, Defenses 4, Neutronium III, High Performance Ships, Advanced Warships, AEGIS Massacre III]
+
+TAC Hammerhead-A class Battlecruiser [Cruiser]
+Quantity: 6 [2988 IC]
+Attack: 42/37/32/30
+Defense: 22
+Saturation: 6
+Speed: 6
+Jump: 4
+Hull: 4
+Slots: 8 [Flatpack Pods x3, Cruiser Targeting x1, Graser x1 | Prototype Warships, Modular 9, PD 2, Weapons 3, Defences 4, Neutronium III]
+
+TAC Kipper-G class Frigate [Destroyer]
+Quantity: 12 [2244 IC]
+Attack: 18/16/14/13
+Defense: 14
+Saturation: 3
+Speed: 8
+Jump: 3
+Hull: 7
+Slots: 4 [Capital Bulkheads x1, Flatpack Pods x1 | Cost 3, Prototype Warships, Modular 3, Weapons 3, Defences 4, PD 2, Neutronium III, High Performance Ships, Living Hull]
+
+TAC Longbow class Bomber [Drone-Bomber]
+Quantity: 17 [714 IC]
+Attack [Starship]: 18/2/0/0
+Attack [Drone]: 0/0/0/0
+Defense: 7
+Saturation: 3
+Speed: 6
+Jump: 0
+Hull: 3
+Slots: 4 [SRM Launchers x3, Improved Bulkheads x1 | Prototype Warships, Warship AI 3, Modular 3, Weapons 1, Defences 4, PD 2, Neutronium 3]
+
+TAC Manta class Brigantine [Cruiser]
+Quantity: 5 [2000 IC]
+Attack: 27/25/23/21
+Defense: 18
+Saturation: 5
+Speed: 6
+Jump: 4
+Hull: 8
+Slots: 8 [Flatpack Pods x2, AEGIS x6, Capital Bulkheads x1 | Cost 3, Modular 9, Defences 4, Weapons 3, PD 2, Neutronium III, AM III]
+
+TAC Narwhal class Ramming Cruiser [Cruiser]
+Quantity: 5 [1950 IC]
+Attack: 51/25/15/13
+Defense: 15
+Saturation: 5
+Speed: 6
+Jump: 4
+Hull: 5
+Slots: 8 [Flatpack Pods x1, Plasma Lances x2, Cruiser Targeting x1, Improved Bulkheads x1 | Cost 3, Prototype Warships, Modular 9, Weapons 3, Defences 4, PD 2, Neutronium III]
+
+TAC Wobbegong class Light Battlecruiser [Cruiser]
+Quantity: 5 [2055 IC]
+Attack: 41/36/31/29
+Defense: 21
+Saturation: 5
+Speed: 6
+Jump: 4
+Hull: 4
+Slots: 8 [Flatpack Pods x3, Cruiser Targeting x1, Graser x1 | Cost 3, Modular 9, Defences 4, Weapons 3, PD 2, Neutronium III]
+
+TAC Seacat-B class Fleet Carrier [Cruiser]
+Quantity: 1 [412 IC]
+Attack: 9/7/5/3
+Defense: 9
+Saturation: 4
+Speed: 6
+Jump: 4
+Hull: 3
+Slots: 8 [Capital Drone Bay x4 | Cost 1, Prototype Warships 1, Modular 9]
+
+Crucible V Corvette [Drone]
+Quantity: 68
+Attack [Starship]: 14/7/5/0
+Attack [Drone]: 10/7/5/0
+Defense: 10
+Saturation: 4
+Speed: 8
+Jump: 2
+Hull: 7
+Slots: 5 [Improved Bulkheads x4, SRM Launchers x1]
+
+Watchman III Corvette [Drone]
+Quantity: 94
+Attack [Starship]: 7/4/2/0
+Attack [Drone]: 7/4/2/0
+Defense: 6
+Saturation: 4
+Speed: 8
+Jump: 2
+Hull: 7
+Slots: 5 [Improved Bulkheads x4]
+
+Saint Michael [Capital]
+Quantity: 2
+Attack: 45/42/39/36
+Defense: 30
+Saturation: 9
+Speed: 5
+Jump: 2
+Hull: 12
+Slots: 8 [Flatpack Launchers x3, Beam x1, Cruiser Targeting x1]
+
+Tylopilus-class Support Cruiser [Cruiser]
+Quantity: 8 [3144 IC]
+Attack: 18/14/10/6
+Defense: 11
+Saturation: 11
+Speed: 6
+Jump: 4
+Hull: 9
+Slots: 7 [Beam Batteries x2, Capital Defense Network x1, AEGIS x3, Capital Bulkheads | Durasteel Armor, Upgraded Weapons I]
+
+Boletus-class AEGIS Cruiser [Cruiser]
+Quantity: 10 [XXXX IC]
+Attack: 18/14/10/6
+Defense: 11
+Saturation: 4
+Speed: 6
+Jump: 4
+Hull: 9
+Slots: 7 [AEGIS x9, Beam Batteries x2, Capital Bulkheads | Durasteel Armor, Upgraded Weapons I]
+
+Polyporus-class Drone Cruiser [Cruiser]
+Quantity: 8 [3144 IC]
+Attack: 10/8/6/4
+Defense: 9
+Saturation: 4
+Speed: 6
+Jump: 4
+Hull: 9
+Slots: 7 [Capital Class Drone Bay x2, AEGIS x3, Capital Bulkheads | Durasteel Armor, Upgraded Weapons I]
+
+Spore Fighter-class Drone Fighter [Drone]
+Quantity: 48 [1680 IC]
+Attack [Starship]: 0/1/0/0
+Attack [Drone]: 9/1/0/0
+Defense: 3
+Saturation: 1
+Speed: 8
+Jump: 0
+Hull: 5
+Slots: 4 [Rapid Pulse Cannons x1, Bulkheads x3 | ]
+
+Spore Bomber-class Drone Bomber [Drone-Bomber]
+Quantity: 48 [1680 IC]
+Attack [Starship]: 9/1/0/0
+Attack [Drone]: 0/1/0/0
+Defense: 3
+Saturation: 1
+Speed: 8
+Jump: 0
+Hull: 5
+Slots: 4 [SRM Launchers x1, Bulkheads x3 | ]
+
+Olyra-class Interdictor Cruiser [Cruiser]
+Quantity: 3 [1023 IC]
+Attack: 9/7/5/3
+Defense: 16
+Saturation: 11
+Speed: 11
+Jump: 4
+Hull: 7
+Slots: 7 [Interdictor, Enhanced Engines x5, IPC Jammer | Durasteel Armor]
+
+Diospyros-Class cruiser [Cruiser]
+Quantity: 2 [600 IP]
+Attack: 9/7/5/3
+Defense: 9
+Saturation: 4
+Speed: 8
+Jump: 4
+Hull: 9
+Slots: 7 [AEGIS x9, Colony Fabricator x1, Enhanced Engines x1, Capital Bulkheads | Durasteel Armor]
+
+Dolomedes-class T4 Carrier [Cruiser]
+Quantity: 2
+Attack: 10/8/6/4
+Defense: 9
+Saturation: 5
+Speed: 6
+Jump: 4
+Hull: 3
+Slots: 4 [Capital-class Drone Bay x 2 | Upgrade Weapons 1, Enhanced Point Defense I]
+
+Latrodectus katipo-class T5 Fighter [Drone]
+Quantity: 24
+Attack [Starship]: 4/2/0/0
+Attack [Drone]: 4/2/0/0
+Defense: 3
+Saturation: 1
+Speed: 8
+Jump: 0
+Hull: 5
+Slots: 4 [Improved Bulkheads x4 | Upgrade Weapons 1, Enhanced Point Defense I, Prototype, Improved Warship AI III, Advanced Warship]
+
+Cat-Salticidae-class Interceptor [Destroyer]
+Quantity: 15
+Attack: 31/17/3/0
+Defense: 7
+Saturation: 4
+Speed: 8
+Jump: 2
+Hull: 6
+Slots: 8 [AEGIS, Improved Bulkheads x2, Graser x4, Defense Network (DN) | Upgrade Weapons 1, Enhanced Point Defense I, Prototype, Modular 3, Catamaran, Advanced Warship]
+
+Cat-Salticidae-PL-class Interceptor [Destroyer]
+Quantity: 15
+Attack: 39/13/3/0
+Defense: 7
+Saturation: 4
+Speed: 8
+Jump: 2
+Hull: 8
+Slots: 8 [AEGIS, Capital Bulkheads, Plasma Lance x2, Defense Network (DN) | Upgrade Weapons 1, Enhanced Point Defense I, Prototype, Modular 3, Catamaran, Advanced Warship]
+
+Orien 1-6 [Capital]
+Quantity: 6 [6120IC]
+Attack: 52/34/24/18
+Defense: 48
+Saturation: 11
+Speed: 6
+Jump: 2
+Hull: 17
+Slots: 12 [Plasma Lancer, Beam Batteries x4, Shield Generator, Capital Screen x2, Cheaper Lineship Construction 3, Modular Capital Hulls 6, Neutronium 3, Upgraded Weapons 3, Upgraded Defenses 3, Enhanced Point Defenses 2, Enhanced Engines 1, Organic Hulls, Advanced AI Core]
+Targeting Order: Capital, Cruiser, Destroyer, Drones
+
+Orien 7-10 [Capital]
+Quantity: 4 [4080IC]
+Attack: 47/30/21/16
+Defense: 46
+Saturation: 11
+Speed: 6
+Jump: 2
+Hull: 13
+Slots: 11 [Plasma Lancer, Beam Batteries x3, Shield Generator, Capital Screen x2, Cheaper Lineship Construction 3, Modular Capital Hulls 6, Neutronium 3, Upgraded Weapons 3, Upgraded Defenses 3, Enhanced Point Defenses 2, Enhanced Engines 1, Organic Hulls]
+Targeting Order: Capital, Cruiser, Destroyer, Drones
+
+ACCS Hunter 1-3 [Cruiser]
+Quantity: 3 [488IC]
+Attack: 15/15/16/16
+Defense: 15
+Saturation: 5
+Speed: 9
+Jump: 4
+Hull: 3
+Slots: 5 [Capital Pod Launchers, Heavy Screens, Enhanced Engines, Long Range Missiles, Cheaper Cruiser Construction 1, Upgraded Weapons 1, Upgraded Defense 1, Enhanced Point Defense 1, Enhanced Engines 1]
+Targeting Order: Destroyer, Cruiser, Drones, Capital
+
+AC Stingray-A class Flak Cruiser [Cruiser]
+Quantity: 6 [2838 IC]
+Attack: 26/21/16/14
+Defense: 16
+Saturation: 6
+Speed: 6
+Jump: 4
+Hull: 5
+Slots: 8 [Flatpack Pods x1, Improved Bulkheads x1, AEGIS x15, Graser x1 | Cost 3, Prototype Warships 1, Modular 9, PD 2, Weapons 3, Defenses 4, Neutronium III]
+
+AC Hammerhead-A class Battlecruiser [Cruiser]
+Quantity: 6 [2988 IC]
+Attack: 42/37/32/30
+Defense: 22
+Saturation: 6
+Speed: 6
+Jump: 4
+Hull: 4
+Slots: 8 [Flatpack Pods x3, Cruiser Targeting x1, Graser x1 | Cost 3, Prototype Warships, Modular 9, PD 2, Weapons 3, Defenses 4, Neutronium III]
+
+AC Whipray class Light Flak Cruiser [Cruiser]
+Quantity: 12 [4680IC]
+Attack: 19/17/15/13
+Defense: 15
+Saturation: 5
+Speed: 6
+Jump: 4
+Hull: 8
+Slots: 8 [Flatpack Pods x1, AEGIS x12, Capital Bulkheads x1 | Cost 3, Modular 9, Defenses 4, Weapons 3, PD 2, Neutronium III, AM III]
+
+AC Wobbegong class Light Battlecruiser [Cruiser]
+Quantity: 12 [4932IC]
+Attack: 41/36/31/29
+Defense: 21
+Saturation: 5
+Speed: 6
+Jump: 4
+Hull: 4
+Slots: 8 [Flatpack Pods x3, Cruiser Targeting x1, Graser x1 | Cost 3, Modular 9, Defenses 4, Weapons 3, PD 2, Neutronium III]
+
+Knight Drone [Drone]
+Quantity: 192 [5376 IC]
+Attack [Starship]: 6/4/0/0
+Attack [Drone]: 6/4/0/0
+Defense: 10
+Saturation: 3
+Speed: 8
+Jump: 0
+Hull: 4
+Slots: 4 [Heavy Screens, Heavy Screens, Improved Bulkheads, Improved Bulkheads, Cheaper Drone Hulls 1, Upgraded Weapons 3, Upgraded Defenses 3, Enhanced Point Defense 2, Neutronium 3, Improved Warship AI 3]
+Targeting Order: Drone, Destroyer, Cruiser, Capital
+
+ACL Hive 1-2 [Capital]
+Quantity: 2 [2088IC]
+Attack: 17/15/13/11
+Defense: 17
+Saturation: 10
+Speed: 6
+Jump: 2
+Hull: 9
+Slots: 10 [Fleet Carrier Drone Bay, Capital Class Drone Bay x2, Cheaper Lineship Construction 1, Upgraded Weapons 1, Upgraded Defense 1, Enhanced Point Defense 1, Enhanced Engines 1, Modular Capital Hulls 3, Carrier Operations 2]
+Targeting Order: Capital, Cruiser, Destroyer, Drone
+
+ACCS Deliverer 1-7 [Cruiser]
+Quantity: 7 [2324IC]
+Attack: 9/7/5/3
+Defense: 12
+Saturation: 6
+Speed: 7
+Jump: 4
+Hull: 3
+Slots: 4 [Capital Class Drone Bay, Capital Class Drone Bay, Cheaper Cruiser Construction 1, Upgraded Defense 3, Enhanced Point Defense 2, Enhanced Engines 1, Carrier Operations 2]
+Targeting Order: Destroyer, Cruiser, Drones, Capital
+
+ACL Seeker [Capital]
+Quantity: 1 [960IC]
+Attack: 16/14/12/10
+Defense: 19
+Saturation: 11
+Speed: 6
+Jump: 2
+Hull: 12
+Slots: 11 [IPC Jammer, Inderdictor, IPC, Shipyard, Suvery Module, Colony Fabricator, Cheaper Lineship Construction 3, Modular Capital Hulls 6, Upgraded Defenses 3, Enhanced Engines 1, Enhanced Point Defenses 2, Neutronium 3]
+Targeting Order: [Capital, Cruiser, Destroyer, Drones]
+
+Colonia Rapid Response HP class [Destroyer]
+Quantity: 55 [13,695 IC]
+Attack: 19/17/15/13
+Defense: 15
+Saturation: 3
+Speed: 8
+Jump: 4
+Hull: 5
+Slots: 5 [Flatpack Pods x1, Capital Bulkheads x1, AEGIS x3 | Cost 3, Prototype Warships, Modular 3, Weapons 3, Defences 4, PD 2, Neutronium III, AM III, High Performance Ships]
+
+R-class Battleship [Capital]
+Quantity: 2 [2140 IC]
+Attack: 35/32/32/29
+Defense: 32
+Saturation: 9
+Speed: 5
+Jump: 2
+Hull: 11
+Slots: 10 [Capital Pod Bays x3, Capital Screens x1, Beam Batteries x1, Improved Bulkheads x1 | Modular Lineship Construction VI,Improved Defenses III, Durasteel Armor, Advanced Lineships, Advanced Warships]
+
+Sudbury-class Battleship [Capital]
+Quantity: 2 [1940 IC]
+Attack: 44/39/34/29
+Defense: 21
+Saturation: 9
+Speed: 5
+Jump: 5
+Hull: 11
+Slots: 6 [Nova Cannon x1,Improved Bulkheads x1,Capital Pod Launcher x1 | Modular Lineship Construction III,Improved Defenses III, Durasteel Armor,Advanced Lineships, Advanced Warships]
+
+Danube-class CA [Cruiser]
+Quantity: 1 [404 IC]
+Attack: 20/18/17/15
+Defense: 14
+Saturation: 5
+Speed: 6
+Jump: 5
+Hull: 3
+Slots: 3 [Capital Pod Launchers, Defense Network | Improved Weapons VI, Improved Defenses III]
+
+Fortress-class CG Flight III [Cruiser]
+Quantity: 7 [2512 IC]
+Attack: 12/10/8/6
+Defense: 12
+Saturation: 6
+Speed: 6
+Jump: 5
+Hull: 3
+Slots: 4 [AEGIS x6, Missile Battery, Defense Network | Advanced Warships, Improved Defenses III]
+
+Hero-308 class CA [Cruiser]
+Quantity: 1 [330 IC]
+Attack: 19/15/11/7
+Defense: 17
+Saturation: 5
+Speed: 6
+Jump: 5
+Hull: 3
+Slots: 3 (Capital Pod Bays x1 Capital Screens x1 | Advanced warships, Improved Weapons I, Improved Defense I, Enhanced PD I)
+
+Aviator CVL Flight III [Cruiser]
+Quantity: 1 [366 IC]
+Attack: 9/7/5/3
+Defense: 12
+Saturation: 5
+Speed: 6
+Jump: 4
+Hull: 4
+Slots: 5 [Capital-class Drone Bay x2, Imp. Bulkheads x1 | Def III, PD I, Carrier II, Advanced Warship, Prototype Warship]
+
+Formation II-class PD Destroyer [Destroyer]
+Quantity: 10 [2672 IC]
+Attack: 8/8/8/8
+Defense: 9
+Saturation: 2
+Speed: 8
+Jump: 2
+Hull: 2
+Slots: 4 [AEGIS x6, LRM x1, Imp. Bulkheads x1 | Advanced Warships, Prototype Warships, AM III, Imp. Weapons II, Imp Defense III, PD I ]
+
+Beagle-class Destroyer [Destroyer]
+Quantity: 1 [240 IC]
+Attack: 10/7/4/1
+Defense: 7
+Saturation: 1
+Speed: 8
+Jump: 2
+Hull: 1
+Slots: 3 [IPC, Tuned Sensors, Beam Battery | Advanced Warships]
+
+Hornet II Cutter Drone [Drone]
+Quantity: 16 [736 IC]
+Attack [Starship]: 5/1/0/0
+Attack [Drone]: 5/1/0/0
+Defense: 6
+Saturation: 2
+Speed: 8
+Jump: 0
+Hull: 5
+Slots: 4 [Improved Bulkheads x4 | Improved Weapons II, Improved Defenses III, PD I, Adv. Warship, Proto. Warship]
+
+Zweihander-Class [Cruiser]
+Quantity: 56 [22 792IC]
+Attack: 20/18/18/16
+Defense: 24
+Saturation: 4
+Speed: 6
+Jump: 5
+Hull: 4
+Slots: 7 [Capital screens, Capital Pod Launcher x2, AEGIS x3]
+
+Rapier-Class [Cruiser]
+Quantity: 8 [2 880IC]
+Attack: 15/13/12/10
+Defense: 22
+Saturation: 4
+Speed: 6
+Jump: 5
+Hull: 4
+Slots: 5 [Capital screens, Capital Pod Launcher, AEGIS x3]
+
+Legate-class [Destroyer]
+Quantity: 114 [20 520 IC]
+Attack: 7/9/11/12
+Defense: 12
+Saturation: 1
+Speed: 8
+Jump: 5
+Hull: 3
+Slots: 4 [LR missiles x2, AEGIS x3, Heavy screens x1]
+
+ZK-420S [Destroyer]
+Quantity: 10 [1800 IC]
+Attack: 7/9/11/12
+Defense: 9
+Saturation: 3
+Speed: 8
+Jump: 5
+Hull: 3
+Slots: 3 [DN, LR missiles x2]
+
+Defender-class [Destroyer]
+Quantity: 55 [9 900IC]
+Attack: 7/5/3/0
+Defense: 15
+Saturation: 3
+Speed: 8
+Jump: 5
+Hull: 4
+Slots: 4 [Bulkhead x1,DN x1, Heavy screens x2]

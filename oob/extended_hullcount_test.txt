@@ -1,0 +1,131 @@
+Extended Hullcount Test Fleet
+
+Bahamut-B class Dreadnought [Capital]
+Quantity: 2
+Attack: 58/55/52/49
+Defense: 46
+Saturation: 11
+Speed: 5
+Jump: 4
+Hull: 17
+Current Hull: 1x 13, 1x 10
+Slots: 11 [Flatpack Pods x4, Shield Generator x1, Beams x1 | Cost 3, Modular 3, Prototype Warships, Weapons 3, Defences 4, PD 2, Neutronium III, High Performance Ships, AI Core, Living Hull, Gorn Energy Relays]
+Aegis: 0
+Targeting Order: Capital, Cruiser, Destroyer, Drone
+
+Capricorn class Light Cruiser [Cruiser]
+Quantity: 2
+Attack: 40/37/34/31
+Defense: 30
+Saturation: 3
+Speed: 6
+Jump: 4
+Hull: 7
+Current Hull: 5x 7, 5x 5
+Slots: 9 [Flatpack Pods x3, Beams x1, Capital Screens x1, AEGIS x3 | Cost VI, Modular 12, Prototype Warships, Neutronium III, Weapons 3, Defences 4, Gorn Energy Harness, Living Hull, Command Core, AM III]
+Aegis: 3
+Targeting Order: Destroyer, Cruiser, Drone, Capital
+
+Carbonero class EW Cruiser [Cruiser]
+Quantity: 13
+Attack: 25/22/19/16
+Defense: 20
+Saturation: 6
+Speed: 6
+Jump: 5
+Hull: 7
+Current Hull: 2x 2
+Slots: 9 [Beams x1, Flatpack Pods x1, Supercapital Decoy Battery x1 | Cost VI, Modular 12, Prototype Warships, Neutronium III, Weapons 3, Defences 6, PD 2, Gorn Energy Harness, Command Core, Living Hull, ACE IV]
+Aegis: 0
+Targeting Order: Destroyer, Cruiser, Drone, Capital
+
+Fata Morgana class EW Lineship [Capital]
+Quantity: 1
+Attack: 16/14/12/10
+Defense: 22
+Saturation: 9
+Speed: 5
+Jump: 2
+Hull: 13
+Current Hull: 1x 13
+Slots: 9 [Interdictor x1, Capital Decoy Launcher x1, Supercapital Decoy Battery x1 | Cost 3, Modular 3, Prototype Warships, Neutronium III, Defences 6, Living Hull]
+Aegis: 0
+Targeting Order: Capital, Cruiser, Destroyer, Drone
+
+Ghost Knifefish class EW Destroyer [Destroyer]
+Quantity: 15
+Attack: 6/4/2/0
+Defense: 12
+Saturation: 3
+Speed: 8
+Jump: 2
+Hull: 3
+Current Hull: 15x 3
+Slots: 6 [Supercapital Decoy Battery x1 | Cost 3, Modular 6, Prototype Warships, Neutronium III, Defences 6, PD 2, Living Hull]
+Aegis: 0
+Targeting Order: Drone, Destroyer, Cruiser, Capital
+
+Gornsbane-B class Heavy Battlecruiser [Cruiser]
+Quantity: 20
+Attack: 47/45/43/41
+Defense: 41
+Saturation: 10
+Speed: 6
+Jump: 7
+Hull: 8
+Current Hull: 10x 4
+Slots: 11 [Flatpack Pods x4, Shield Generator x1, Cruiser Targeting x1 | Cost VI, Modular 12, Prototype Warships, Neutronium VI, Weapons 3, Defences 6, PD 5, High Performance Ships, Living Hull, Greater Command Core, ACE IV]
+Aegis: 0
+Targeting Order: Destroyer, Cruiser, Drone, Capital
+
+Phantom Cruiser class Signature [Cruiser]
+Quantity: 143
+Attack: 0/0/0/0
+Defense: 0
+Saturation: 0
+Speed: 0
+Jump: 0
+Hull: 1
+Current Hull: 143x 1
+Slots: 0 [ | ]
+Aegis: 0
+Targeting Order: Destroyer, Cruiser, Drone, Capital
+
+Phantom Destroyer class Signature [Destroyer]
+Quantity: 165
+Attack: 0/0/0/0
+Defense: 0
+Saturation: 0
+Speed: 0
+Jump: 0
+Hull: 1
+Current Hull: 165x 1
+Slots: 0 [ | ]
+Aegis: 0
+Targeting Order: Drone, Destroyer, Cruiser, Capital
+
+Phantom Lineship class Signature [Capital]
+Quantity: 11
+Attack: 0/0/0/0
+Defense: 0
+Saturation: 0
+Speed: 0
+Jump: 0
+Hull: 1
+Current Hull: 11x 1
+Slots: 0 [ | ]
+Aegis: 0
+Targeting Order: Capital, Cruiser, Destroyer, Drone
+
+Warspite class Heavy Battlecruiser [Cruiser]
+Quantity: 1
+Attack: 56/54/52/50
+Defense: 64
+Saturation: 10
+Speed: 6
+Jump: 7
+Hull: 16
+Current Hull: 1x 16
+Slots: 17 [Flatpack Pods x5, Shield Generator x3, Cruiser Targeting x1 | Cost VI, Modular 12, Prototype Warships, Neutronium III, Weapons 3, Defences 6, PD 5, High Performance Ships, Living Hull, AI Core, ACE IV, Catamaran]
+Aegis: 0
+Targeting Order: Destroyer, Cruiser, Drone, Capital
