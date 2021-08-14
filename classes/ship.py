@@ -1,9 +1,7 @@
 import collections
 import os
-from pathlib import Path
 import re
-import numpy
-import itertools
+import uuid
 from definitions import OOB_DIR
 
 targeting_orders = {
@@ -19,12 +17,14 @@ default_attack_type = 'starship'
 
 
 class Ship:
+    # Ship name
     class_name = ''
     hull_type = ''
     hull_subtype = ''
     hull_full_type = ''
 
     # Meta-stats
+    ship_id = ''
     combat_value = 0
 
     def __init__(self):
@@ -41,6 +41,7 @@ class Ship:
             'aegis': 0,
             'targeting order': []
         })
+        self.ship_id = uuid.uuid4()
 
     def parse_statblock(self, statblock: str):
         stats = statblock.split('\n')
