@@ -36,8 +36,8 @@ class Ship:
             'speed': 0,
             'jump': 0,
             'hull': 1,
-            'current hull': [],
             'slots': '',
+            'current hull': [],
             'aegis': 0,
             'targeting order': []
         })
