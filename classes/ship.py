@@ -201,6 +201,8 @@ class Fleet:
                     'hull_type': ship.hull_type,
                     'side': self.side,
                     'current_hull': current_hull,
+                    'saturation': ship.stats['saturation'],
+                    'combat_score': {},
                     'initiative': ship.stats['speed'],
                     'target_weight': ship.stats['speed'],
                     'ship': ship
