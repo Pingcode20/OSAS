@@ -38,4 +38,4 @@ Saturation: 3
 Speed: 8
 Jump: 5
 Hull: 2
-Slots: 3 [Missiles, Screens, Aegis]
+Slots: 3 [Missiles, Screens, Aegis x1]

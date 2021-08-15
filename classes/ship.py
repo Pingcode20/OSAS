@@ -18,22 +18,20 @@ default_attack_type = 'starship'
 
 class Ship:
     # Ship name
-    name = ''
-    fleet = ''
-
     class_name = ''
     hull_type = ''
     hull_subtype = ''
     hull_full_type = ''
+    fleet = None
 
     # Meta-stats
     ship_id = ''
     combat_value = 0
+    combat_score = {}
 
     # Combat stats
     initiative = 0
     target_weight = 0
-    combat_score = {}
 
     # instances
     instances = []
@@ -50,7 +48,7 @@ class Ship:
     # 'target_weight': ship.stats['speed'],
     # 'ship': ship
 
-    def __init__(self):
+    def __init__(self, fleet=None):
         self.stats = collections.OrderedDict({
             'attack': {default_attack_type: [0, 0, 0, 0]},
             'defense': 0,
@@ -63,6 +61,7 @@ class Ship:
             'targeting order': []
         })
         self.ship_id = uuid.uuid4()
+        self.fleet = fleet
 
     def parse_statblock(self, statblock: str):
         stats = statblock.split('\n')
@@ -78,7 +77,7 @@ class Ship:
         else:
             self.hull_full_type = self.hull_type + '-' + self.hull_subtype
 
-        quantity = 1 # Default to 1 ship if otherwise unspecified
+        quantity = 1  # Default to 1 ship if otherwise unspecified
         current_hulls = []
         for stat in stats[1:]:
             k, val = list(map(str.strip, stat.split(':', maxsplit=1)))
@@ -113,12 +112,14 @@ class Ship:
         self.prepare_derived_stats()
         self.initialise_instances(current_hulls=current_hulls, quantity=quantity)
 
+        return self
+
     # Parse modules for any special effects like AEGIS
     def parse_special_modules(self, modules: str):
         # AEGIS
         match_aegis = re.match(r'.*AEGIS x(\d+).*', modules, re.IGNORECASE)
         if match_aegis:
-            self.stats['aegis'] = self.stats['aegis'] or match_aegis.groups()[0]
+            self.stats['aegis'] = self.stats['aegis'] or int(match_aegis.groups()[0])
 
         # Cruiser Targeting
         if re.match(r'.*cruiser targeting.*', modules, re.IGNORECASE):
@@ -132,6 +133,9 @@ class Ship:
         combat_value = (sum(scaled_general_attack) + scaled_general_attack[0] + scaled_defence * 9) ** 0.5
         self.combat_value = round(combat_value)
 
+        self.initiative = self.stats['speed'] or 1
+        self.target_weight = self.stats['speed'] or 1
+
     def initialise_instances(self, current_hulls, quantity):
         # Fill in extra hulls at full strength if quantity is higher than specified
         if len(current_hulls) < quantity:
@@ -140,9 +144,16 @@ class Ship:
 
         # Generate instances
         instances = []
+        ship_id = 1
         for current_hull in current_hulls:
-            instance = {'current_hull': current_hull, 'saturation': self.stats['saturation']}
+            instance = {
+                'current_hull': current_hull,
+                'saturation': self.stats['saturation'],
+                'name': self.fleet.fleet_name + ' ' + self.class_name + ' #' + str(ship_id),
+                'ship': self
+            }
             instances.append(instance)
+            ship_id += 1
         self.instances = instances
 
     def generate_statblock(self):
@@ -172,10 +183,9 @@ class Ship:
         stat_strings.append('Current Hull: ' + hull_string)
 
         return f"%s [%s]\n" % (self.class_name, self.hull_full_type) + f"Quantity: %d\n" % (len(self.instances)) + \
-                   '\n'.join(stat_strings)
+               '\n'.join(stat_strings)
 
     def generate_summary(self):
         quantity = len(self.instances)
         return self.class_name + ' [' + self.hull_full_type + '] x' + str(quantity) + ' - ' + str(
             self.combat_value * quantity) + ' power rating (' + str(self.combat_value) + ' ea.)'
-

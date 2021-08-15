@@ -31,8 +31,7 @@ class Fleet:
 
         ships = {}
         for statblock in oob[1:]:
-            ship = Ship()
-            ship.parse_statblock(statblock)
+            ship = Ship(fleet=self).parse_statblock(statblock)
             ships[ship.ship_id] = ship
 
         self.ships = ships
@@ -40,24 +39,7 @@ class Fleet:
     def generate_combat_list(self):
         combat_list = []
         for ship_id in self.ships:
-            ship_number = 1
-            ship = self.ships[ship_id]
-            for current_hull in ship.stats['current hull']:
-                ship_instance = {
-                    'type_id': ship_id,
-                    'fleet': self.fleet_name,
-                    'name': ship.class_name + ' #' + str(ship_number),
-                    'hull_type': ship.hull_type,
-                    'side': self.side,
-                    'current_hull': current_hull,
-                    'saturation': ship.stats['saturation'],
-                    'combat_score': {},
-                    'initiative': ship.stats['speed'],
-                    'target_weight': ship.stats['speed'],
-                    'ship': ship
-                }
-                combat_list.append(ship_instance)
-                ship_number += 1
+            combat_list += [instance for instance in self.ships[ship_id].instances if instance['current_hull'] > 0]
         return combat_list
 
     def generate_fleet_oob(self):
