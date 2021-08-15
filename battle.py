@@ -1,5 +1,5 @@
 import random
-from classes.ship import default_attack_type
+from classes.ship import default_attack_type, hull_types
 from classes.fleet import Fleet
 from util import weighted_shuffle
 
@@ -8,14 +8,17 @@ fleet2_filename = 'fleet_b.txt'
 
 ranges = [3, 2, 1, 0, 0, 0, 1, 2, 3]
 
+side_a = 'Side A'
+side_b = 'Side B'
+
 
 def find_target(target_list: list, targeting_order: list):
     selected_target = []
     for target_type in targeting_order:
-        potential_targets = [t for t in target_list if t['ship'].hull_type == target_type and t['current_hull'] > 0]
+        potential_targets = target_list[target_type]
         if len(potential_targets):
             selected_target = \
-            random.choices(potential_targets, weights=[t['ship'].target_weight for t in potential_targets], k=1)[0]
+                random.choices(potential_targets, weights=[t['ship'].target_weight for t in potential_targets], k=1)[0]
             break
     return selected_target
 
@@ -65,39 +68,45 @@ def attack(attacker, defender, current_range, current_round):
         defender['saturation'] = defender['ship'].stats['saturation']  # Reset saturation after hit
         print(defender['name'] + ' suffers 1 damage from saturation overload')
 
+
 if __name__ == '__main__':
     sides = {
-        'Side A': [],
-        'Side B': []
+        side_a: [],
+        side_b: []
     }
 
-    fleet_a = Fleet(side='Side A', fleet_filename=fleet1_filename)
-    sides['Side A'].append(fleet_a)
+    fleet_a = Fleet(side=side_a, fleet_filename=fleet1_filename)
+    sides[side_a].append(fleet_a)
 
-    fleet_b = Fleet(side='Side B', fleet_filename=fleet2_filename)
-    sides['Side B'].append(fleet_b)
-
-    # Round starts here
-    current_round = 0
+    fleet_b = Fleet(side=side_b, fleet_filename=fleet2_filename)
+    sides[side_b].append(fleet_b)
 
     # Created weighted lists
     ships_by_side = {}
     all_ships = []
 
     for side in sides:
-        ship_list = []
+        ships_by_side[side] = {hull_type: [] for hull_type in hull_types}
         for fleet in sides[side]:
-            ship_list.extend(fleet.generate_combat_list())
-        ships_by_side[side] = ship_list
-        all_ships.extend(ship_list)
+            ships_by_type = fleet.generate_combat_list()
+            for ship_type in ships_by_type:
+                ship_list = ships_by_type[ship_type]
+                all_ships.extend(ship_list)
+                ships_by_side[side][ship_type].extend(ship_list)
+
+    # Round starts here
+    current_round = 0
 
     initiative_list = weighted_shuffle(all_ships, [ship['ship'].initiative for ship in all_ships])
 
     for active_ship in initiative_list:
         if active_ship['current_hull'] <= 0: continue  # Dead ships don't act
-
         ship = active_ship['ship']
-        enemies = [ship for side in ships_by_side for ship in ships_by_side[side] if side != active_ship['ship'].fleet.side]
+
+        if active_ship['ship'].fleet.side == side_a:
+            enemies = ships_by_side[side_b]
+        else:
+            enemies = ships_by_side[side_a]
 
         # Primary attack
         target = find_target(enemies, ship.stats['targeting order'])

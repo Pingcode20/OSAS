@@ -13,6 +13,8 @@ targeting_orders = {
     'Cruiser Targeting': ['Cruiser', 'Capital', 'Destroyer', 'Drone'],
 }
 
+hull_types = ['Drone', 'Destroyer', 'Cruiser', 'Capital']
+
 default_attack_type = 'starship'
 
 
@@ -35,18 +37,6 @@ class Ship:
 
     # instances
     instances = []
-
-    # 'type_id': ship_id,
-    # 'fleet': self.fleet_name,
-    # 'name': ship.class_name + ' #' + str(ship_number),
-    # 'hull_type': ship.hull_type,
-    # 'side': self.side,
-    # 'current_hull': current_hull,
-    # 'saturation': ship.stats['saturation'],
-    # 'combat_score': {},
-    # 'initiative': ship.stats['speed'],
-    # 'target_weight': ship.stats['speed'],
-    # 'ship': ship
 
     def __init__(self, fleet=None):
         self.stats = collections.OrderedDict({

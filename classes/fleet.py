@@ -1,5 +1,5 @@
 import os
-from classes.ship import Ship
+from classes.ship import Ship, hull_types
 from definitions import OOB_DIR
 
 class Fleet:
@@ -37,9 +37,10 @@ class Fleet:
         self.ships = ships
 
     def generate_combat_list(self):
-        combat_list = []
+        combat_list = {hull_type: [] for hull_type in hull_types}
         for ship_id in self.ships:
-            combat_list += [instance for instance in self.ships[ship_id].instances if instance['current_hull'] > 0]
+            ship = self.ships[ship_id]
+            combat_list[ship.hull_type] += [instance for instance in ship.instances if instance['current_hull'] > 0]
         return combat_list
 
     def generate_fleet_oob(self):
