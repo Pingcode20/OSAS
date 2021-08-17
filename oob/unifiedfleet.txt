@@ -212,7 +212,7 @@ Speed: 6
 Jump: 4
 Hull: 14
 Slots: 11 [Flatpack x3, Shield Generator x2, Beam Batteries, Advanced Warships, Prototype Warships, High Performance Starships, Capital Fleet, Cheaper Lineship Construction 3, Modular Capital Hulls 6, Living Hulls, Neutornium Hulls 3, Upgraded Weapons 3, Upgraded Defenses 4, Enhanced Point Defense 2, Enhanced Engines 1, Gorn Energy Relays, Command Core]
-Targeting Order: Capital, Cruiser, Destroyer, Drones
+Targeting Order: Capital, Cruiser, Destroyer, Drone
 
 Gornsbane-B class Heavy Battlecruiser [Cruiser]
 Quantity: 30 [18420 IC]
@@ -244,7 +244,7 @@ Speed: 6
 Jump: 4
 Hull: 5
 Slots: 8 [AEGIS x15, Flatpack Pods x1, Improved Bulkheads x1, Graser x1 | Cost 3, Prototype Warships 1, Modular 9, PD 2, Weapons 3, Defenses 4, Neutronium III]
-Targeting Order: Destroyer, Cruiser, Drones, Capital
+Targeting Order: Destroyer, Cruiser, Drone, Capital
 
 Verge Corvette [Drone]
 Quantity: 250 [18250 IC]
@@ -278,7 +278,7 @@ Speed: 6
 Jump: 4
 Hull: 5
 Slots: 8 [AEGIS x15, Flatpack Pods x1, Improved Bulkheads x1, Graser x1 | Cost 3, Prototype Warships 1, Modular 9, PD 2, Weapons 3, Defences 4, Neutronium III]
-Targeting Order: Destroyer, Cruiser, Drones, Capital
+Targeting Order: Destroyer, Cruiser, Drone, Capital
 
 AC Corvette [Drone]
 Quantity: 90 [6570 IC]

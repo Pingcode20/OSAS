@@ -1,0 +1,166 @@
+Gorn
+
+Citadel [Capital]
+Quantity: 24
+Attack: 56/50/44/38
+Defense: 43
+Saturation: 14
+Speed: 0
+Jump: 0
+Hull: 17
+Slots: 13 [Beam Batteries x8, LRM x1, Capitol Screens x2, Advanced Capital Ships, Advanced Warships, Prototype Warships, Advanced Defenses, High Performance Starships, Neutronium 6, Upgraded Weapons 6, Type R Plasma Torpedoes, F Refit, Upgraded Defenses 3, Modular Capital Ships 3, EPD 3]
+
+Fort [Cruiser]
+Quantity: 72
+Attack: 32/32/35/35
+Defense: 21
+Saturation: 9
+Speed: 0
+Jump: 0
+Hull: 11
+Slots: 9 [Capital Pods x3, Cruiser Targeting x1, Capital Bulkhead x1, Advanced Warships, Prototype Warships, Advanced Defenses, High Performance Starships, Neutronium 6, Upgraded Weapons 6, Type G Plasma Torpedoes, F Refit, Modular Cruisers 3, Upgraded Defenses 3, EPD 3]
+
+Emplacement [Destroyer]
+Quantity: 72
+Attack: 28/28/26/22
+Defense: 15
+Saturation: 4
+Speed: 0
+Jump: 0
+Hull: 8
+Slots: 7 [LRMs x1, Beam x4, Capital Bulkheads x1, Advanced Warships, Prototype Warships, Advanced Defenses, High Performance Starships, Upgraded Weapons 6, Neutronium 6, Type F Plasma Torpedoes, Modular Destroyer Hulls 3, Updef 3, EPD 3]
+
+Emplacement [Destroyer]
+Quantity: 48
+Attack: 14/14/14/14
+Defense: 13
+Saturation: 4
+Speed: 0
+Jump: 0
+Hull: 8
+Slots: 7 [AEGIS x18, Capital Bulkheads x1, Advanced Warships, Prototype Warships, Advanced Defenses, High Performance Starships, Upgraded Weapons 6, Neutronium 6, Type F Plasma Torpedoes, Updef 3, EPD 3, AM 3]
+
+Emplacement [Destroyer]
+Quantity: 24
+Attack: 14/14/14/14
+Defense: 13
+Saturation: 6
+Speed: 0
+Jump: 0
+Hull: 20
+Slots: 7 [Impervious Bulkheads x1, Defense Network x1, Advanced Warships, Prototype Warships, Advanced Defenses, High Performance Starships, Upgraded Weapons 6, Neutronium 6, Type F Plasma Torpedoes, Updef 3, EPD 3]
+
+Minefield [Drone-Bomber]
+Quantity: 200
+Attack [Starship]: 0/0/0/28
+Attack [Drone]: 0/0/0/28
+Defense: 11
+Saturation: 1
+Speed: 0
+Jump: 0
+Hull: 8
+Slots: 4 [Improved Bulkheads x4, Advanced Warships, Prototype Warships, Advanced Defenses, High Performance Starships, Upgraded Weapons 6, Upgraded Defenses 3, Neutronium 6]
+
+Megafauna-D Battleship [Capital]
+Quantity: 5
+Attack: 53/49/49/45
+Defense: 42
+Saturation: 9
+Speed: 5
+Jump: 5
+Hull: 14
+Slots: 12 [Capital Pods x4, Capitol Screens x1, Beams x2, Advanced Warships, Advanced Capitals, Prototype Starships, High Performance Starships, Mod Cap hulls 3, Neutronium 6, Upgraded Weapons 5, Upgraded Defenses 3, Type R Torps, F Refits]
+
+Tyrannosaurus-I Battlecruiser [Cruiser]
+Quantity: 12
+Attack: 36/34/35/33
+Defense: 30
+Saturation: 6
+Speed: 6
+Jump: 5
+Hull: 11
+Slots: 9 [Capital Pod Launchers x3, Capitol Screens x1, Cruiser Targeting, Advanced Warships, Prototype Starships, High Performance Starships, Mod Cruise Hulls 3, Type S Torps, F Refits, Neutronium 6, Upgraded Weapons 5, Upgraded Defenses 3]
+
+Gorn Stegosaurus-O Heavy Destroyer[Cruiser]
+Quantity: 15
+Attack: 18/16/14/12
+Defense: 12
+Saturation: 5
+Speed: 7
+Jump: 5
+Hull: 8
+Slots: 7 [AEGIS x12, Capital Bulkheads x1, Missile x1, Advanced Warships, Prototype Warships, High Performance Starships, Mod Cruisers 6, Neutronium 6, Upgraded Weapons 5, Upgraded Defenses 3, AM3, EPD3]
+
+Gorn Stegosaurus-P Heavy Destroyer[Cruiser]
+Quantity: 30
+Attack: 15/13/11/9
+Defense: 12
+Saturation: 5
+Speed: 7
+Jump: 5
+Hull: 5
+Slots: 8 Capital Bulkheads x1, Capital Drone Hangar x2, AEGIS x3, Advanced Warships, Prototype Starships, High Performance Starships, Mod Cruisers 6, Neutronium 6, Upgraded Weapons 5, Upgrades Defenses 3, AM3, EPD3, Carrier Ops 4]
+
+Gorn Stegosaurus-Q Heavy Destroyer[Cruiser]
+Quantity: 60
+Attack: 32/29/27/24
+Defense: 16
+Saturation: 5
+Speed: 7
+Jump: 5
+Hull: 8
+Slots: 7 [Capital Bulkheads x1, Beams x3, CPL x1, AEGIS x3, Advanced Warships, Prototype Starships, High Performance Starships, Mod Cruisers 6, Neutronium 6, Upgraded Weapons 5, Upgrades Defenses 3, AM3, EPD3]
+
+Gorn Raptor-I Light Destroyer[Destroyer]
+Quantity: 160
+Attack: 17/19/20/22
+Defense: 10
+Saturation: 1
+Speed: 9
+Jump: 5
+Hull: 3
+Slots: 4 [Beam Battery x1, LRMs x2, Improved Bulkheads, Advanced Warships, Prototype Warships, High Performance Starships, Neutronium 3, Mod Destroyer Hull 3, Upgraded Weapons 5, Type F Torps, Upgraded defenses 2]
+
+Bomber Squadron [Drone-Bomber]
+Quantity: 2600
+Attack [Starship]: 12/0/0/0
+Attack [Drone]: 0/0/0/0
+Defense: 3
+Saturation: 1
+Speed: 6
+Jump: 0
+Hull: 2
+Slots: 4 [Light Plasma Capacitor x4, Advanced Warships, Prototype Warships, Upgraded Weapons 3, Neutronium Hull 3, Mod Drone Hulls 3]
+
+Type G Plasma Torpedo [Drone]
+Quantity: 354 [0 IC]
+Attack [Starship]: 3/0/0/0
+Attack [Drone]: 3/0/0/0
+Defense: 3
+Saturation: 1
+Speed: 8
+Jump: 0
+Hull: 1
+Slots: 0
+
+Type S Plasma Torpedo [Drone]
+Quantity: 24 [0 IC]
+Attack [Starship]: 6/0/0/0
+Attack [Drone]: 6/0/0/0
+Defense: 4
+Saturation: 1
+Speed: 8
+Jump: 0
+Hull: 2
+Slots: 0
+
+Type R Plasma Torpedo [Drone]
+Quantity: 4058 [0 IC]
+Attack [Starship]: 9/0/0/0
+Attack [Drone]: 9/0/0/0
+Defense: 6
+Saturation: 1
+Speed: 8
+Jump: 0
+Hull: 3
+Slots: 0

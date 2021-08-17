@@ -3,22 +3,30 @@ from classes.ship import default_attack_type, hull_types
 from classes.fleet import Fleet
 from util import weighted_shuffle
 
-fleet1_filename = 'fleet_a.txt'
-fleet2_filename = 'fleet_b.txt'
+fleet1_filename = 'unifiedfleet.txt'
+fleet2_filename = 'gorn.txt'
 
 ranges = [3, 2, 1, 0, 0, 0, 1, 2, 3]
 
-side_a = 'Side A'
-side_b = 'Side B'
+side_a = 'A'
+side_b = 'B'
+
+class BattleEvent:
+    event = ''
+    actor = ''
+    subject = ''
+    result = ''
+
 
 
 def find_target(target_list: list, targeting_order: list):
-    selected_target = []
+    selected_target = None
     for target_type in targeting_order:
         potential_targets = target_list[target_type]
         if len(potential_targets):
             selected_target = \
-                random.choices(potential_targets, weights=[t['ship'].target_weight for t in potential_targets], k=1)[0]
+                random.choices(potential_targets, weights=[t['ship'].target_weight for t in potential_targets],
+                               k=1)[0]
             break
     return selected_target
 
@@ -33,7 +41,7 @@ def attack(attacker, defender, current_range, current_round):
         attack_value = attack_lines[default_attack_type][current_range]
 
     if attack_value == 0:
-        print('No effective firepower at this range')
+        # print('No effective firepower at this range')
         return  # 0 attack means 0 impact
 
     # Get defence value
@@ -59,14 +67,21 @@ def attack(attacker, defender, current_range, current_round):
         attacker['ship'].combat_score[current_round] = combat_score
     defender['current_hull'] -= damage
 
-    print('Dealt ' + str(damage) + ' damage to target')
+    # print('Dealt ' + str(damage) + ' damage to target')
 
     # Calculate saturation
     defender['saturation'] -= 1
     if defender['saturation'] <= 0:
         defender['current_hull'] -= 1
         defender['saturation'] = defender['ship'].stats['saturation']  # Reset saturation after hit
-        print(defender['name'] + ' suffers 1 damage from saturation overload')
+        # print(defender['name'] + ' suffers 1 damage from saturation overload')
+
+    if defender['current_hull'] <= 0:
+        # print(defender['name'] + ' is destroyed!')
+        target_hull_type = defender['ship'].hull_type
+        enemies[target_hull_type].remove(defender)
+        all_ships.remove(defender)
+        destroyed_ships[current_round].append(defender)
 
 
 if __name__ == '__main__':
@@ -94,33 +109,46 @@ if __name__ == '__main__':
                 all_ships.extend(ship_list)
                 ships_by_side[side][ship_type].extend(ship_list)
 
+    destroyed_ships = {rnd: [] for rnd in range(0, len(ranges))}
+
     # Round starts here
-    current_round = 0
+    for current_round in range(0,len(ranges)):
+        # print('====Round ' + str(current_round) + '====')
+        current_range = ranges[current_round]
 
-    initiative_list = weighted_shuffle(all_ships, [ship['ship'].initiative for ship in all_ships])
+        initiative_list = weighted_shuffle(all_ships, [ship['ship'].initiative for ship in all_ships])
 
-    for active_ship in initiative_list:
-        if active_ship['current_hull'] <= 0: continue  # Dead ships don't act
-        ship = active_ship['ship']
+        for active_ship in initiative_list:
+            if active_ship['current_hull'] <= 0: continue  # Dead ships don't act
+            ship = active_ship['ship']
 
-        if active_ship['ship'].fleet.side == side_a:
-            enemies = ships_by_side[side_b]
-        else:
-            enemies = ships_by_side[side_a]
+            if active_ship['ship'].fleet.side == side_a:
+                enemies = ships_by_side[side_b]
+            else:
+                enemies = ships_by_side[side_a]
 
-        # Primary attack
-        target = find_target(enemies, ship.stats['targeting order'])
-        if target:
-            print(active_ship['name'] + ' attacking target ' + target['name'])
-            attack(attacker=active_ship, defender=target, current_range=ranges[current_round],
-                   current_round=current_round)
-
-        # AEGIS attacks
-        for a in range(0, active_ship['ship'].stats['aegis']):
-            target = find_target(enemies, ['Drone'])
-            if target:
-                print(active_ship['name'] + ' attacking AEGIS target ' + target['name'])
-                attack(attacker=active_ship, defender=target, current_range=ranges[current_round],
+            # Primary attack
+            defender = find_target(enemies, ship.stats['targeting order'])
+            if defender:
+                # print(active_ship['name'] + ' attacking target ' + defender['name'])
+                attack(attacker=active_ship, defender=defender, current_range=ranges[current_round],
                        current_round=current_round)
 
-    a = 1
+            # AEGIS attacks
+            for a in range(0, active_ship['ship'].stats['aegis']):
+                defender = find_target(enemies, ['Drone'])
+                if defender:
+                    # print(active_ship['name'] + ' attacking AEGIS target ' + defender['name'])
+                    attack(attacker=active_ship, defender=defender, current_range=ranges[current_round],
+                           current_round=current_round)
+
+        # print('\n')
+
+    # Remaining
+    print('Battle Results: ' + fleet_a.fleet_name)
+    print(fleet_a.generate_fleet_summary())
+    print('\n')
+
+    print('Battle Results: ' + fleet_b.fleet_name)
+    print(fleet_b.generate_fleet_summary())
+    print('\n')
