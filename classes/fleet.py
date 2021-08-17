@@ -47,7 +47,7 @@ class Fleet:
         return self.fleet_name + '\n\n' + '\n\n'.join([self.ships[ship].generate_statblock() for ship in self.ships])
 
     def generate_fleet_summary(self):
-        return self.fleet_name + '\n\n' + '\n'.join([self.ships[ship].generate_summary() for ship in self.ships])
+        return '\n'.join([self.ships[ship].generate_summary() for ship in self.ships])
 
 if __name__ == '__main__':
     fleet = Fleet(fleet_filename='extended_hullcount_test.txt', side='Side A')
