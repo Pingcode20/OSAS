@@ -1,6 +1,7 @@
 class BattleEvent:
     ship_name = ''
-    def __init__(self, ship_name:str):
+
+    def __init__(self, ship_name: str):
         self.ship_name = ship_name
 
     def show(self):
@@ -42,3 +43,23 @@ class SaturationEvent(BattleEvent):
 class DestroyedEvent(BattleEvent):
     def show(self):
         return f'%s was destroyed!' % self.ship_name
+
+
+class RoundStartEvent(BattleEvent):
+    current_round = 0
+
+    def __init__(self, current_round):
+        self.current_round = current_round
+
+    def show(self):
+        return f'\n====== Round %d ======\n' % self.current_round
+
+
+class BattleEndEvent(BattleEvent):
+    winning_fleets = []
+
+    def __init__(self, winning_fleets: list):
+        self.winning_fleets = winning_fleets
+
+    def show(self):
+        return f'Battle Ended! Victorious Fleets: %s' % ', '.join(self.winning_fleets)

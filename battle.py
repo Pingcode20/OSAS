@@ -141,7 +141,25 @@ class Battle:
                     if defender:
                         # print(active_ship['name'] + ' attacking AEGIS target ' + defender['name'])
                         self.attack(attacker=active_ship, defender=defender, enemies=enemies)
+
+            # Test if anyone has won
+            winning_side = None
+            fleets_with_ships_left = 0
+            for side in self.ships_by_side:
+                for ship_type in self.ships_by_side[side]:
+                    if len(self.ships_by_side[side][ship_type]) > 1:
+                        fleets_with_ships_left += 1
+                        winning_side = side
+                        break
+
+            if fleets_with_ships_left <= 1:
+                self.add_combat_event(battle_event.BattleEndEvent([fleet.fleet_name for fleet in self.sides[winning_side]]))
+                break
+
         # Remaining
+        last_event = self.events[current_round][-1]
+        print(last_event.show())
+
         for fleet in self.fleets:
             print('Battle Results: ' + fleet.fleet_name + ' - Side ' + fleet.side)
             print(fleet.generate_fleet_summary())
