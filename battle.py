@@ -1,13 +1,14 @@
+import collections
 import random
 from classes.ship import default_attack_type, hull_types
 from classes.fleet import Fleet
 import classes.battle_event as battle_event
+import classes.combat_scoreboard as st
+from definitions import ranges
 from util import weighted_shuffle
 
 side_a = 'A'
 side_b = 'B'
-
-ranges = [3, 2, 1, 0, 0, 0, 1, 2, 3]
 
 
 def find_target(target_list: list, targeting_order: list):
@@ -37,6 +38,7 @@ class Battle:
     events = {rnd: [] for rnd in range(0, len(ranges))}
 
     current_round = 0
+    final_round = 0
 
     # Only supports Side A and Side B for now
     def load_fleet(self, side, fleet_filename):
@@ -85,18 +87,14 @@ class Battle:
             damage = 1
         else:
             damage = 0
+            defender['ship'].update_scorecard(current_round, st.defence, attack_value ** 2)
 
         # Inflict damage
-        combat_score = min(damage, max(defender['current_hull'], 0)) * defender['ship'].combat_value
-        try:
-            attacker['ship'].combat_score[current_round] += combat_score
-        except KeyError:
-            attacker['ship'].combat_score[current_round] = combat_score
+        attacker['ship'].update_scorecard(current_round, st.attack, damage * defence_value ** 2)
         defender['current_hull'] -= damage
+        defender['ship'].update_scorecard(current_round, st.hull_loss, damage)
         self.add_combat_event(
             battle_event.AttackEvent(attacker['name'], defender['name'], attack_value, defence_value, damage, roll))
-
-        # print('Dealt ' + str(damage) + ' damage to target')
 
         # Calculate saturation
         defender['saturation'] -= 1
@@ -104,10 +102,9 @@ class Battle:
             self.add_combat_event(battle_event.SaturationEvent(defender['name']))
             defender['current_hull'] -= 1
             defender['saturation'] = defender['ship'].stats['saturation']  # Reset saturation after hit
-            # print(defender['name'] + ' suffers 1 damage from saturation overload')
+            defender['ship'].update_scorecard(current_round, st.saturation, 1)
 
         if defender['current_hull'] <= 0:
-            # print(defender['name'] + ' is destroyed!')
             self.add_combat_event(battle_event.DestroyedEvent(defender['name']))
             target_hull_type = defender['ship'].hull_type
             enemies[target_hull_type].remove(defender)
@@ -153,20 +150,61 @@ class Battle:
                         break
 
             if fleets_with_ships_left <= 1:
-                self.add_combat_event(battle_event.BattleEndEvent([fleet.fleet_name for fleet in self.sides[winning_side]]))
+                self.add_combat_event(
+                    battle_event.BattleEndEvent([fleet.fleet_name for fleet in self.sides[winning_side]]))
+                self.final_round = current_round
                 break
-
-        # Remaining
-        last_event = self.events[current_round][-1]
-        print(last_event.show())
-
-        for fleet in self.fleets:
-            print('Battle Results: ' + fleet.fleet_name + ' - Side ' + fleet.side)
-            print(fleet.generate_fleet_summary())
-            print('\n')
 
     def add_combat_event(self, event):
         self.events[self.current_round].append(event)
+
+    def report_summary(self):
+        report = ''
+
+        for current_round in range(0, self.final_round+1):
+            report += '\n=====Round ' + str(current_round) + '=====\n'
+            report += self.report_round(current_round) + '\n'
+
+        report += '\n'
+        report += self.generate_fleet_summaries() + '\n'
+
+        return report
+
+    def report_round(self, current_round):
+        report = '\n=====Round ' + str(current_round+1) + '=====\n'
+        for side in self.sides:
+            for fleet in self.sides[side]:
+                report += 'Fleet'
+                report += fleet.generate_combat_scoreboard(current_round)
+
+        # Report on destroyed ships
+        report += 'Ships Destroyed: ' + '\n'
+
+        destroyed_ships = self.destroyed_ships[current_round]
+        losses_counter = collections.Counter(
+            [ship['ship'].fleet.fleet_name + ' ' + ship['ship'].class_name for ship in destroyed_ships])
+        if len(losses_counter) > 0:
+            losses = []
+            for lost_ship in losses_counter:
+                losses.append(lost_ship + ' x' + str(losses_counter[lost_ship]))
+            losses.sort()
+            report += '\n'.join(losses)
+        else:
+            report += 'None' + '\n'
+
+        return report
+
+    def generate_fleet_summaries(self):
+        report = ''
+
+        for side in self.sides:
+            for fleet in self.sides[side]:
+                report += 'Battle Results: ' + fleet.fleet_name + ' - Side ' + fleet.side + '\n'
+                report += fleet.generate_fleet_summary()
+                report += '\n'
+            report += '\n'
+
+        return report
 
 
 if __name__ == '__main__':
@@ -179,3 +217,5 @@ if __name__ == '__main__':
 
     battle.initialise_battle()
     battle.simulate_battle()
+
+    print(battle.report_summary())

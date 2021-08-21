@@ -1,8 +1,7 @@
 import collections
-import os
+import classes.combat_scoreboard as st
 import re
 import uuid
-from definitions import OOB_DIR
 
 targeting_orders = {
     'Drone': ['Drone', 'Destroyer', 'Cruiser', 'Capital'],
@@ -29,12 +28,9 @@ class Ship:
     fleet = None
 
     # Meta-stats
-    ship_id = ''
+    class_id = ''
     combat_value = 0
-    combat_performance = {}
-    attack_score = {}
-    defence_score = {}
-    saturation_score = {}
+    combat_scorecard = None
 
     # Combat stats
     initiative = 0
@@ -55,8 +51,9 @@ class Ship:
             'aegis': 0,
             'targeting order': []
         })
-        self.ship_id = uuid.uuid4()
+        self.class_id = uuid.uuid4()
         self.fleet = fleet
+        self.combat_scorecard = {}
 
     def parse_statblock(self, statblock: str):
         stats = statblock.split('\n')
@@ -68,7 +65,7 @@ class Ship:
         self.hull_subtype = match[2] or match[1]
 
         # Split the name if possible
-        name_match = re.match(r'(.*?)-?class\s*(.*)',self.class_name,re.IGNORECASE)
+        name_match = re.match(r'(.*?)-?class\s*(.*)', self.class_name, re.IGNORECASE)
         if name_match:
             self.short_name = name_match.groups()[0].strip()
             self.role = (name_match.groups()[1] or self.short_name).strip()
@@ -156,11 +153,23 @@ class Ship:
                 'current_hull': current_hull,
                 'saturation': self.stats['saturation'],
                 'name': self.fleet.fleet_name + ' ' + self.short_name + ' #' + str(ship_id),
-                'ship': self
+                'ship': self,
+                'ship_id': uuid.uuid4()
             }
             instances.append(instance)
             ship_id += 1
         self.instances = instances
+
+    def update_scorecard(self, current_round, field, points):
+        if current_round not in self.combat_scorecard: self.combat_scorecard[current_round] = {}
+
+        self.combat_scorecard[current_round][field] = self.combat_scorecard[current_round].get(field, 0) + points
+
+    def display_scorecard(self, current_round):
+        if current_round not in self.combat_scorecard: return ''
+        scorecard = self.combat_scorecard[current_round]
+        return self.fleet.fleet_name + ' ' + self.class_name + ': ' + ', '.join(
+            [k + ': ' + str(scorecard[k]) for k in scorecard])
 
     def generate_statblock(self):
         stats = self.stats
@@ -193,8 +202,10 @@ class Ship:
 
     def generate_summary(self):
         quantity = len([inst for inst in self.instances if inst['current_hull'] > 0])
-        hull_counter = collections.Counter([instance['current_hull'] for instance in self.instances if instance['current_hull'] > 0])
+        hull_counter = collections.Counter(
+            [instance['current_hull'] for instance in self.instances if instance['current_hull'] > 0])
         hull_string = ', '.join([str(hull_counter[hull]) + 'x ' + str(hull) for hull in hull_counter]) or 'None Left'
 
         return self.class_name + ' [' + self.hull_full_type + '] x' + str(quantity) + ' - ' + str(
-            self.combat_value * quantity) + ' power rating (' + str(self.combat_value) + ' ea.)' + ' - Hull: ' +  hull_string
+            self.combat_value * quantity) + ' power rating (' + str(
+            self.combat_value) + ' ea.)' + ' - Hull: ' + hull_string

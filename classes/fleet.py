@@ -32,7 +32,7 @@ class Fleet:
         ships = {}
         for statblock in oob[1:]:
             ship = Ship(fleet=self).parse_statblock(statblock)
-            ships[ship.ship_id] = ship
+            ships[ship.class_id] = ship
 
         self.ships = ships
 
@@ -48,6 +48,9 @@ class Fleet:
 
     def generate_fleet_summary(self):
         return '\n'.join([self.ships[ship].generate_summary() for ship in self.ships])
+
+    def generate_combat_scoreboard(self, current_round):
+        return '\n'.join([self.ships[ship].display_scorecard(current_round) for ship in self.ships])
 
 if __name__ == '__main__':
     fleet = Fleet(fleet_filename='extended_hullcount_test.txt', side='Side A')
