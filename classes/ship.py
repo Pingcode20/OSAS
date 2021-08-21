@@ -99,7 +99,9 @@ class Ship:
                 self.parse_special_modules(val)
                 self.stats[key] = val
             elif key == 'targeting order':
-                self.stats['targeting order'] = list(map(str.strip, val.split(',')))
+                # Clean up targeting order to remove formatting issues
+                target_values = val.split(',')
+                self.stats['targeting order'] = [target.strip().rstrip('s').title() for target in target_values]
             elif key == 'current hull':
                 hulls = list(map(str.strip, val.split(',')))
                 for hull_record in hulls:
