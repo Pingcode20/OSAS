@@ -20,6 +20,8 @@ default_attack_type = 'starship'
 
 class Ship:
     # Ship name
+    short_name = ''
+    role = ''
     class_name = ''
     hull_type = ''
     hull_subtype = ''
@@ -29,7 +31,10 @@ class Ship:
     # Meta-stats
     ship_id = ''
     combat_value = 0
-    combat_score = {}
+    combat_performance = {}
+    attack_score = {}
+    defence_score = {}
+    saturation_score = {}
 
     # Combat stats
     initiative = 0
@@ -61,6 +66,15 @@ class Ship:
         self.class_name = match[0].strip()
         self.hull_type = match[1]
         self.hull_subtype = match[2] or match[1]
+
+        # Split the name if possible
+        name_match = re.match(r'(.*?)-?class\s*(.*)',self.class_name,re.IGNORECASE)
+        if name_match:
+            self.short_name = name_match.groups()[0].strip()
+            self.role = (name_match.groups()[1] or self.short_name).strip()
+        else:
+            self.short_name = self.class_name
+            self.role = self.class_name
 
         if self.hull_type == self.hull_subtype:
             self.hull_full_type = self.hull_type
@@ -139,7 +153,7 @@ class Ship:
             instance = {
                 'current_hull': current_hull,
                 'saturation': self.stats['saturation'],
-                'name': self.fleet.fleet_name + ' ' + self.class_name + ' #' + str(ship_id),
+                'name': self.fleet.fleet_name + ' ' + self.short_name + ' #' + str(ship_id),
                 'ship': self
             }
             instances.append(instance)
