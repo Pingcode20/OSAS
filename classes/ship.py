@@ -120,7 +120,7 @@ class Ship:
     # Parse modules for any special effects like AEGIS
     def parse_special_modules(self, modules: str):
         # AEGIS
-        match_aegis = re.match(r'.*AEGIS x(\d+).*', modules, re.IGNORECASE)
+        match_aegis = re.match(r'.*AEGIS\s?x(\d+).*', modules, re.IGNORECASE)
         if match_aegis:
             self.stats['aegis'] = self.stats['aegis'] or int(match_aegis.groups()[0])
 
