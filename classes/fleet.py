@@ -2,6 +2,7 @@ import os
 from classes.ship import Ship, hull_types
 from definitions import OOB_DIR
 
+
 class Fleet:
     fleet_name = ''
     side = ''
@@ -10,7 +11,7 @@ class Fleet:
 
     fleet_filename = ''
 
-    def __init__(self, side:str, fleet_filename: str = None):
+    def __init__(self, side: str, fleet_filename: str = None):
         if fleet_filename:
             self.load_fleet_file(fleet_filename)
 
@@ -50,7 +51,15 @@ class Fleet:
         return '\n'.join([self.ships[ship].generate_summary() for ship in self.ships])
 
     def generate_combat_scoreboard(self, current_round):
-        return '\n'.join([self.ships[ship].display_scorecard(current_round) for ship in self.ships])
+        scoreboard_strings = []
+        for class_id in self.ships:
+            ship = self.ships[class_id]
+            scoreboard = ship.combat_scorecard[current_round]
+            if sum(scoreboard.values()) > 0:
+                scoreboard_strings.append(ship.display_scorecard(current_round))
+
+        return '\n'.join(sorted(scoreboard_strings))
+
 
 if __name__ == '__main__':
     fleet = Fleet(fleet_filename='extended_hullcount_test.txt', side='Side A')

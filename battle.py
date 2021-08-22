@@ -87,7 +87,14 @@ class Battle:
             damage = 1
         else:
             damage = 0
+
+        if damage:
+            attacker['ship'].update_scorecard(current_round, st.hits, 1)
+            attacker['ship'].update_scorecard(current_round, st.damage, damage)
+        else:
+            attacker['ship'].update_scorecard(current_round, st.misses, 1)
             defender['ship'].update_scorecard(current_round, st.defence, attack_value ** 2)
+
 
         # Inflict damage
         attacker['ship'].update_scorecard(current_round, st.attack, damage * defence_value ** 2)
@@ -139,6 +146,13 @@ class Battle:
                         # print(active_ship['name'] + ' attacking AEGIS target ' + defender['name'])
                         self.attack(attacker=active_ship, defender=defender, enemies=enemies)
 
+            # Post-exchange
+            for side in self.sides:
+                for fleet in self.sides[side]:
+                    for ship_id in fleet.ships:
+                        ship = fleet.ships[ship_id]
+                        ship.update_scorecard(current_round,st.quantity,ship.get_quantity())
+
             # Test if anyone has won
             winning_side = None
             fleets_with_ships_left = 0
@@ -162,7 +176,6 @@ class Battle:
         report = ''
 
         for current_round in range(0, self.final_round+1):
-            report += '\n=====Round ' + str(current_round) + '=====\n'
             report += self.report_round(current_round) + '\n'
 
         report += '\n'
@@ -174,11 +187,12 @@ class Battle:
         report = '\n=====Round ' + str(current_round+1) + '=====\n'
         for side in self.sides:
             for fleet in self.sides[side]:
-                report += 'Fleet'
+                report += 'Fleet: ' + fleet.fleet_name + '\n'
                 report += fleet.generate_combat_scoreboard(current_round)
+                report += '\n\n'
 
         # Report on destroyed ships
-        report += 'Ships Destroyed: ' + '\n'
+        report += '\n' + 'Ships Destroyed: ' + '\n'
 
         destroyed_ships = self.destroyed_ships[current_round]
         losses_counter = collections.Counter(
@@ -218,4 +232,6 @@ if __name__ == '__main__':
     battle.initialise_battle()
     battle.simulate_battle()
 
-    print(battle.report_summary())
+    f = open('test_battle.txt','w')
+    f.write(battle.report_summary())
+    f.close()
