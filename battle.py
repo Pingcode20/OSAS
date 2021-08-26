@@ -183,6 +183,20 @@ class Battle:
 
         return report
 
+    def report_verbose(self):
+        report = ''
+        for current_round in self.events:
+            if not len(self.events[current_round]): break
+
+            report += '\n=====Round ' + str(current_round+1) + '=====\n'
+            for event in self.events[current_round]:
+                report += event.show() + '\n'
+            report += '\n'
+
+        report += self.generate_fleet_summaries()
+
+        return report
+
     def report_round(self, current_round):
         report = '\n=====Round ' + str(current_round+1) + '=====\n'
         for side in self.sides:
@@ -234,4 +248,8 @@ if __name__ == '__main__':
 
     f = open('test_battle.txt','w')
     f.write(battle.report_summary())
+    f.close()
+
+    f = open('test_battle_verbose.txt','w')
+    f.write(battle.report_verbose())
     f.close()

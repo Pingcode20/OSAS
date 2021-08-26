@@ -27,12 +27,12 @@ class AttackEvent(BattleEvent):
         self.roll = roll
 
     def show(self):
-        if self.attack_value < self.defence_value + 10:
-            return f'%s attacks %s but is ineffective' % (self.attacker, self.defender)
+        if self.attack_value < self.defence_value - 10:
+            return f'%s attacks %s but is ineffective (1d20+%d vs %d)' % (self.attacker, self.defender, self.attack_value, self.defence_value+10)
         elif self.damage == 0:
-            return f'%s attacks %s but misses' % (self.attacker, self.defender)
+            return f'%s attacks %s but misses (%d+%d vs %d)' % (self.attacker, self.defender, self.roll, self.attack_value, self.defence_value+10)
         else:
-            return f'%s attacks %s for %d damage' % (self.attacker, self.defender, self.damage)
+            return f'%s attacks %s for %d damage (%d+%d vs %d)' % (self.attacker, self.defender, self.damage, self.roll, self.attack_value, self.defence_value+10)
 
 
 class SaturationEvent(BattleEvent):
