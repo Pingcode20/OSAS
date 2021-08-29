@@ -32,7 +32,7 @@ class Battle:
     fleets = []
 
     ships_by_side = {}
-    all_ships = []
+    all_ships = {}
 
     destroyed_ships = {rnd: [] for rnd in range(0, len(ranges))}
     events = {rnd: [] for rnd in range(0, len(ranges))}
@@ -48,7 +48,7 @@ class Battle:
 
     def initialise_battle(self):
         self.ships_by_side = {}
-        self.all_ships = []
+        self.all_ships = {}
 
         for side in self.sides:
             self.ships_by_side[side] = {hull_type: [] for hull_type in hull_types}
@@ -56,7 +56,7 @@ class Battle:
                 ships_by_type = fleet.generate_combat_list()
                 for ship_type in ships_by_type:
                     ship_list = ships_by_type[ship_type]
-                    self.all_ships.extend(ship_list)
+                    self.all_ships.update({ship['ship_id']: ship for ship in ship_list})
                     self.ships_by_side[side][ship_type].extend(ship_list)
 
     def attack(self, attacker, defender, enemies):
@@ -115,14 +115,15 @@ class Battle:
             self.add_combat_event(battle_event.DestroyedEvent(defender['name']))
             target_hull_type = defender['ship'].hull_type
             enemies[target_hull_type].remove(defender)
-            self.all_ships.remove(defender)
+            del self.all_ships[defender['ship_id']]
             self.destroyed_ships[current_round].append(defender)
 
     def simulate_battle(self):
         for current_round in range(0, len(ranges)):
             self.current_round = current_round
 
-            initiative_list = weighted_shuffle(self.all_ships, [ship['ship'].initiative for ship in self.all_ships])
+            all_ships = list(self.all_ships.values())
+            initiative_list = weighted_shuffle(all_ships, [ship['ship'].initiative for ship in all_ships])
 
             for active_ship in initiative_list:
                 if active_ship['current_hull'] <= 0: continue  # Dead ships don't act
@@ -236,6 +237,8 @@ class Battle:
 
 
 if __name__ == '__main__':
+    random.seed(5555)
+
     fleet1_filename = 'unifiedfleet.txt'
     fleet2_filename = 'gorn.txt'
 
