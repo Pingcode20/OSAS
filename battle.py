@@ -11,14 +11,13 @@ side_a = 'A'
 side_b = 'B'
 
 
-def find_target(target_list: list, targeting_order: list):
+def find_target(target_list: list, target_weights: list, targeting_order: list):
     selected_target = None
     for target_type in targeting_order:
         potential_targets = target_list[target_type]
+        potential_target_weights = target_weights[target_type]
         if len(potential_targets):
-            selected_target = \
-                random.choices(potential_targets, weights=[t['ship'].target_weight for t in potential_targets],
-                               k=1)[0]
+            selected_target = random.choices(potential_targets, weights=potential_target_weights, k=1)[0]
             break
     return selected_target
 
@@ -32,6 +31,7 @@ class Battle:
     fleets = []
 
     ships_by_side = {}
+    target_weight_by_side = {}
     all_ships = {}
 
     destroyed_ships = {rnd: [] for rnd in range(0, len(ranges))}
@@ -52,12 +52,16 @@ class Battle:
 
         for side in self.sides:
             self.ships_by_side[side] = {hull_type: [] for hull_type in hull_types}
+            self.target_weight_by_side[side] = {hull_type: [] for hull_type in hull_types}
+
             for fleet in self.sides[side]:
                 ships_by_type = fleet.generate_combat_list()
                 for ship_type in ships_by_type:
                     ship_list = ships_by_type[ship_type]
                     self.all_ships.update({ship['ship_id']: ship for ship in ship_list})
                     self.ships_by_side[side][ship_type].extend(ship_list)
+                    self.target_weight_by_side[side][ship_type].extend(
+                        [ship['ship'].target_weight for ship in ship_list])
 
     def attack(self, attacker, defender, enemies):
         current_round = self.current_round
@@ -95,7 +99,6 @@ class Battle:
             attacker['ship'].update_scorecard(current_round, st.misses, 1)
             defender['ship'].update_scorecard(current_round, st.defence, attack_value ** 2)
 
-
         # Inflict damage
         attacker['ship'].update_scorecard(current_round, st.attack, damage * defence_value ** 2)
         defender['current_hull'] -= damage
@@ -112,11 +115,7 @@ class Battle:
             defender['ship'].update_scorecard(current_round, st.saturation, 1)
 
         if defender['current_hull'] <= 0:
-            self.add_combat_event(battle_event.DestroyedEvent(defender['name']))
-            target_hull_type = defender['ship'].hull_type
-            enemies[target_hull_type].remove(defender)
-            del self.all_ships[defender['ship_id']]
-            self.destroyed_ships[current_round].append(defender)
+            self.destroy_ship(defender)
 
     def simulate_battle(self):
         for current_round in range(0, len(ranges)):
@@ -131,18 +130,20 @@ class Battle:
 
                 if active_ship['ship'].fleet.side == side_a:
                     enemies = self.ships_by_side[side_b]
+                    target_weights = self.target_weight_by_side[side_b]
                 else:
                     enemies = self.ships_by_side[side_a]
+                    target_weights = self.target_weight_by_side[side_a]
 
                 # Primary attack
-                defender = find_target(enemies, ship.stats['targeting order'])
+                defender = find_target(enemies, target_weights, ship.stats['targeting order'])
                 if defender:
                     # print(active_ship['name'] + ' attacking target ' + defender['name'])
                     self.attack(attacker=active_ship, defender=defender, enemies=enemies)
 
                 # AEGIS attacks
                 for a in range(0, active_ship['ship'].stats['aegis']):
-                    defender = find_target(enemies, ['Drone'])
+                    defender = find_target(enemies, target_weights, ['Drone'])
                     if defender:
                         # print(active_ship['name'] + ' attacking AEGIS target ' + defender['name'])
                         self.attack(attacker=active_ship, defender=defender, enemies=enemies)
@@ -152,7 +153,7 @@ class Battle:
                 for fleet in self.sides[side]:
                     for ship_id in fleet.ships:
                         ship = fleet.ships[ship_id]
-                        ship.update_scorecard(current_round,st.quantity,ship.get_quantity())
+                        ship.update_scorecard(current_round, st.quantity, ship.get_quantity())
 
             # Test if anyone has won
             winning_side = None
@@ -173,10 +174,22 @@ class Battle:
     def add_combat_event(self, event):
         self.events[self.current_round].append(event)
 
+    def destroy_ship(self, ship, index=None):
+        side = ship['ship'].get_side()
+        hull_type = ship['ship'].hull_type
+        ship_list = self.ships_by_side[side][hull_type]
+        index = index or ship_list.index(ship)
+
+        self.add_combat_event(battle_event.DestroyedEvent(ship['name']))
+        del ship_list[index]
+        del self.target_weight_by_side[side][hull_type][index]
+        del self.all_ships[ship['ship_id']]
+        self.destroyed_ships[self.current_round].append(ship)
+
     def report_summary(self):
         report = ''
 
-        for current_round in range(0, self.final_round+1):
+        for current_round in range(0, self.final_round + 1):
             report += self.report_round(current_round) + '\n'
 
         report += '\n'
@@ -189,7 +202,7 @@ class Battle:
         for current_round in self.events:
             if not len(self.events[current_round]): break
 
-            report += '\n=====Round ' + str(current_round+1) + '=====\n'
+            report += '\n=====Round ' + str(current_round + 1) + '=====\n'
             for event in self.events[current_round]:
                 report += event.show() + '\n'
             report += '\n'
@@ -199,7 +212,7 @@ class Battle:
         return report
 
     def report_round(self, current_round):
-        report = '\n=====Round ' + str(current_round+1) + '=====\n'
+        report = '\n=====Round ' + str(current_round + 1) + '=====\n'
         for side in self.sides:
             for fleet in self.sides[side]:
                 report += 'Fleet: ' + fleet.fleet_name + '\n'
@@ -249,10 +262,10 @@ if __name__ == '__main__':
     battle.initialise_battle()
     battle.simulate_battle()
 
-    f = open('test_battle.txt','w')
+    f = open('test_battle.txt', 'w')
     f.write(battle.report_summary())
     f.close()
 
-    f = open('test_battle_verbose.txt','w')
+    f = open('test_battle_verbose.txt', 'w')
     f.write(battle.report_verbose())
     f.close()

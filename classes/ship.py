@@ -55,6 +55,9 @@ class Ship:
         self.fleet = fleet
         self.combat_scorecard = {}
 
+    def get_side(self):
+        return self.fleet.side
+
     def parse_statblock(self, statblock: str):
         stats = statblock.split('\n')
 
