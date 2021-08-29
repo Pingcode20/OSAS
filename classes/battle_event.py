@@ -37,7 +37,7 @@ class AttackEvent(BattleEvent):
 
 class SaturationEvent(BattleEvent):
     def show(self):
-        return f'%s''s defences were saturated and it took 1 damage' % self.ship_name
+        return f'%s\'s defences were saturated and it took 1 damage' % self.ship_name
 
 
 class DestroyedEvent(BattleEvent):

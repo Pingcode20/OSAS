@@ -196,10 +196,10 @@ class Ship:
             stat_strings.append(stat.title() + ': ' + stat_string)
 
         hull_counter = collections.Counter([instance['current_hull'] for instance in self.instances])
-        hull_string = ', '.join([str(hull_counter[hull]) + 'x ' + str(hull) for hull in hull_counter])
+        hull_string = ', '.join([str(hull_counter[hull]) + 'x ' + str(hull) for hull in hull_counter if hull > 0])
         stat_strings.append('Current Hull: ' + hull_string)
 
-        return f"%s [%s]\n" % (self.class_name, self.hull_full_type) + f"Quantity: %d\n" % (len(self.instances)) + \
+        return f"%s [%s]\n" % (self.class_name, self.hull_full_type) + f"Quantity: %d\n" % self.quantity() + \
                '\n'.join(stat_strings)
 
     def generate_summary(self):
@@ -212,5 +212,5 @@ class Ship:
             self.combat_value * quantity) + ' power rating (' + str(
             self.combat_value) + ' ea.)' + ' - Hull: ' + hull_string
 
-    def get_quantity(self):
+    def quantity(self):
         return len([inst for inst in self.instances if inst['current_hull'] > 0])

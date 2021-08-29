@@ -4,8 +4,9 @@ from classes.ship import default_attack_type, hull_types
 from classes.fleet import Fleet
 import classes.battle_event as battle_event
 import classes.combat_scoreboard as st
-from definitions import ranges
+from definitions import ranges, OUTPUT_DIR
 from util import weighted_shuffle
+import os
 
 side_a = 'A'
 side_b = 'B'
@@ -153,7 +154,7 @@ class Battle:
                 for fleet in self.sides[side]:
                     for ship_id in fleet.ships:
                         ship = fleet.ships[ship_id]
-                        ship.update_scorecard(current_round, st.quantity, ship.get_quantity())
+                        ship.update_scorecard(current_round, st.quantity, ship.quantity())
 
             # Test if anyone has won
             winning_side = None
@@ -262,10 +263,17 @@ if __name__ == '__main__':
     battle.initialise_battle()
     battle.simulate_battle()
 
-    f = open('test_battle.txt', 'w')
+    f = open(os.path.join(OUTPUT_DIR,'test_battle.txt'), 'w')
     f.write(battle.report_summary())
     f.close()
 
-    f = open('test_battle_verbose.txt', 'w')
+    f = open(os.path.join(OUTPUT_DIR,'test_battle_verbose.txt'), 'w')
     f.write(battle.report_verbose())
     f.close()
+
+    for side in battle.sides.values():
+        for fleet in side:
+            f = open(os.path.join(OUTPUT_DIR,fleet.fleet_name + '.txt'),'w')
+            f.write(fleet.generate_fleet_oob())
+            f.close()
+
