@@ -139,14 +139,12 @@ class Battle:
                 # Primary attack
                 defender = find_target(enemies, target_weights, ship.stats['targeting order'])
                 if defender:
-                    # print(active_ship['name'] + ' attacking target ' + defender['name'])
                     self.attack(attacker=active_ship, defender=defender, enemies=enemies)
 
                 # AEGIS attacks
                 for a in range(0, active_ship['ship'].stats['aegis']):
                     defender = find_target(enemies, target_weights, ['Drone'])
                     if defender:
-                        # print(active_ship['name'] + ' attacking AEGIS target ' + defender['name'])
                         self.attack(attacker=active_ship, defender=defender, enemies=enemies)
 
             # Post-exchange
