@@ -184,6 +184,7 @@ class Battle:
         del self.target_weight_by_side[side][hull_type][index]
         del self.all_ships[ship['ship_id']]
         self.destroyed_ships[self.current_round].append(ship)
+        ship['ship'].update_scorecard(self.current_round,st.losses,1)
 
     def report_summary(self):
         report = ''
@@ -270,8 +271,8 @@ if __name__ == '__main__':
     f.close()
 
     for side in battle.sides.values():
-        for fleet in side:
-            f = open(os.path.join(OUTPUT_DIR,fleet.fleet_name + '.txt'),'w')
-            f.write(fleet.generate_fleet_oob())
+        for participating_fleet in side:
+            f = open(os.path.join(OUTPUT_DIR,participating_fleet.fleet_name + ' - Post-Battle.txt'),'w')
+            f.write(participating_fleet.generate_fleet_oob())
             f.close()
 

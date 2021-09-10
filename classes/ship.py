@@ -164,14 +164,14 @@ class Ship:
         self.instances = instances
 
     def update_scorecard(self, current_round, field, points):
-        if current_round not in self.combat_scorecard: self.combat_scorecard[current_round] = st.Scoreboard()
+        if current_round not in self.combat_scorecard: self.combat_scorecard[current_round] = st.Scoreboard(ship=self)
 
         self.combat_scorecard[current_round][field] = self.combat_scorecard[current_round].get(field, 0) + points
 
     def display_scorecard(self, current_round):
         if current_round not in self.combat_scorecard: return ''
         scorecard = self.combat_scorecard[current_round]
-        return self.class_name + ': ' + scorecard.show()
+        return self.class_name + ': ' + scorecard.show_line()
 
     def generate_statblock(self):
         stats = self.stats

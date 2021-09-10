@@ -117,7 +117,7 @@ class OSASMap:
         plot = plt.figure(figsize=(20, 20))
         nx.draw(self.map, nx.get_node_attributes(self.map, 'pos'), with_labels=True)
 
-        plot.show()
+        plot.show_line()
 
     def save(self):
         map_name = self.map.graph['map_name']
