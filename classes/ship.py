@@ -39,6 +39,13 @@ class Ship:
     # instances
     instances = []
 
+    # Action List
+    start_of_round = []
+    on_turn = []
+    on_defence = []
+    on_death = []
+    end_of_round = []
+
     def __init__(self, fleet=None):
         self.stats = collections.OrderedDict({
             'attack': {default_attack_type: [0, 0, 0, 0]},
@@ -54,6 +61,7 @@ class Ship:
         self.class_id = uuid.uuid4()
         self.fleet = fleet
         self.combat_scorecard = {}
+        self.instances = []
 
     def get_side(self):
         return self.fleet.side
@@ -143,25 +151,17 @@ class Ship:
         self.target_weight = self.stats['speed'] or 1
 
     def initialise_instances(self, current_hulls, quantity):
+        self.instances = []  # Initialising resets all instances
+
         # Fill in extra hulls at full strength if quantity is higher than specified
         if len(current_hulls) < quantity:
             current_hulls.extend(
                 [self.stats['hull']] * (quantity - len(current_hulls)))
 
         # Generate instances
-        instances = []
-        ship_id = 1
         for current_hull in current_hulls:
-            instance = {
-                'current_hull': current_hull,
-                'saturation': self.stats['saturation'],
-                'name': self.fleet.fleet_name + ' ' + self.short_name + ' #' + str(ship_id),
-                'ship': self,
-                'ship_id': uuid.uuid4()
-            }
-            instances.append(instance)
-            ship_id += 1
-        self.instances = instances
+            instance = ShipInstance(self, current_hull=current_hull)
+            self.instances.append(instance)
 
     def update_scorecard(self, current_round, field, points):
         if current_round not in self.combat_scorecard: self.combat_scorecard[current_round] = st.Scoreboard(ship=self)
@@ -199,7 +199,7 @@ class Ship:
         hull_string = ', '.join([str(hull_counter[hull]) + 'x ' + str(hull) for hull in hull_counter if hull > 0])
         stat_strings.append('Current Hull: ' + hull_string)
 
-        return f"%s [%s]\n" % (self.class_name, self.hull_full_type) + f"Quantity: %d\n" % self.quantity() + \
+        return f"%s [%s]\n" % (self.class_name, self.hull_full_type) + f"Quantity: %d\n" % self.get_quantity() + \
                '\n'.join(stat_strings)
 
     def generate_summary(self):
@@ -212,5 +212,40 @@ class Ship:
             self.combat_value * quantity) + ' power rating (' + str(
             self.combat_value) + ' ea.)' + ' - Hull: ' + hull_string
 
-    def quantity(self):
+    def get_quantity(self):
         return len([inst for inst in self.instances if inst['current_hull'] > 0])
+
+    def get_fleet_name(self):
+        if self.fleet:
+            return self.fleet.fleet_name
+        else:
+            return ''
+
+
+class ShipInstance:
+    current_hull = 1
+    saturation: int = 0
+    name = ''
+    ship: Ship = None
+    ship_id = None
+
+    def __init__(self, ship: Ship, current_hull: int = None, name: str = None):
+        self.current_hull = current_hull or self.ship.stats['hull']
+        self.ship = ship
+        self.saturation = self.ship.stats['saturation']
+        self.ship_id = uuid.uuid4()
+        if name:
+            self.name = name
+        else:
+            # Auto-generate name
+            name_parts = list()
+            name_parts.append(self.ship.get_fleet_name())
+            name_parts.append(self.ship.short_name)
+            name_parts.append('#' + str(len(self.ship.instances)))
+            self.name = ' '.join([x for x in name_parts if x])
+
+    def __getitem__(self, item):
+        return getattr(self, item)
+
+    def __setitem__(self, key, value):
+        setattr(self, key, value)

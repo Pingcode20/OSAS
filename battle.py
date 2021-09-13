@@ -29,8 +29,6 @@ class Battle:
         side_b: []
     }
 
-    fleets = []
-
     ships_by_side = {}
     target_weight_by_side = {}
     all_ships = {}
@@ -45,7 +43,6 @@ class Battle:
     def load_fleet(self, side, fleet_filename):
         fleet = Fleet(side=side, fleet_filename=fleet_filename)
         self.sides[side].append(fleet)
-        self.fleets.append(fleet)
 
     def initialise_battle(self):
         self.ships_by_side = {}
@@ -152,7 +149,7 @@ class Battle:
                 for fleet in self.sides[side]:
                     for ship_id in fleet.ships:
                         ship = fleet.ships[ship_id]
-                        ship.update_scorecard(current_round, st.quantity, ship.quantity())
+                        ship.update_scorecard(current_round, st.quantity, ship.get_quantity())
 
             # Test if anyone has won
             winning_side = None

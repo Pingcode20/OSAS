@@ -45,9 +45,9 @@ class Fleet:
         return combat_list
 
     def generate_fleet_oob(self):
-        fleet_statblocks = [ship.generate_statblock() for ship in self.ships.values() if ship.quantity() > 0]
+        fleet_statblocks = [ship.generate_statblock() for ship in self.ships.values() if ship.get_quantity() > 0]
         if len(fleet_statblocks) > 0:
-            return self.fleet_name + '\n\n' + '\n\n'.join([ship.generate_statblock() for ship in self.ships.values() if ship.quantity() > 0])
+            return self.fleet_name + '\n\n' + '\n\n'.join([ship.generate_statblock() for ship in self.ships.values() if ship.get_quantity() > 0])
         else:
             return self.fleet_name + '\n\n' + 'None (All ships have hull <1)'
 
