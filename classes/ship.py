@@ -2,6 +2,9 @@ import collections
 import classes.combat_scoreboard as st
 import re
 import uuid
+from typing import Callable
+
+import classes.defence
 
 targeting_orders = {
     'Drone': ['Drone', 'Destroyer', 'Cruiser', 'Capital'],
@@ -37,14 +40,20 @@ class Ship:
     target_weight = 0
 
     # instances
-    instances = []
+    instances: list = None
 
     # Action List
-    start_of_round = []
-    on_turn = []
-    on_defence = []
-    on_death = []
-    end_of_round = []
+    start_of_round: list = None
+    on_turn: list = None
+    on_defence: list = None
+    on_death: list = None
+    end_of_round: list = None
+
+    # Special functions
+    attack: Callable = None
+    defence: Callable = None
+    damage: Callable = None
+
 
     def __init__(self, fleet=None):
         self.stats = collections.OrderedDict({
@@ -62,6 +71,8 @@ class Ship:
         self.fleet = fleet
         self.combat_scorecard = {}
         self.instances = []
+
+        self.defence = classes.defence.BasicDefence(self)
 
     def get_side(self):
         return self.fleet.side
@@ -164,12 +175,14 @@ class Ship:
             self.instances.append(instance)
 
     def update_scorecard(self, current_round, field, points):
-        if current_round not in self.combat_scorecard: self.combat_scorecard[current_round] = st.Scoreboard(ship=self)
+        if current_round not in self.combat_scorecard:
+            self.combat_scorecard[current_round] = st.Scoreboard(ship=self)
 
         self.combat_scorecard[current_round][field] = self.combat_scorecard[current_round].get(field, 0) + points
 
     def display_scorecard(self, current_round):
-        if current_round not in self.combat_scorecard: return ''
+        if current_round not in self.combat_scorecard:
+            return ''
         scorecard = self.combat_scorecard[current_round]
         return self.class_name + ': ' + scorecard.show_line()
 
@@ -244,6 +257,7 @@ class ShipInstance:
             name_parts.append('#' + str(len(self.ship.instances)))
             self.name = ' '.join([x for x in name_parts if x])
 
+    # Backwards compatibility, TODO: Refactor this
     def __getitem__(self, item):
         return getattr(self, item)
 
