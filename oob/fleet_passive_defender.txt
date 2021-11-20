@@ -4,7 +4,7 @@ Defender-class [Destroyer]
 Quantity: 30
 Attack: 0/0/0/0
 Defense: 10
-Saturation: 3
+Saturation: 100
 Speed: 8
 Jump: 5
 Hull: 20

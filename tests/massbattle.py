@@ -7,9 +7,9 @@ import os
 if __name__ == '__main__':
     random.seed(5555)
 
-    battle_name = 'bully_battle'
-    fleet1_filename = 'fleet_bully.txt'
-    fleet2_filename = 'fleet_passive_defender.txt'
+    battle_name = 'mass_battle'
+    fleet1_filename = 'unifiedfleet.txt'
+    fleet2_filename = 'gorn.txt'
 
     battle_instance = battle.Battle()
     battle_instance.load_fleet(side=definitions.battle_properties.side_a, fleet_filename=fleet1_filename)

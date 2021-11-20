@@ -2,6 +2,9 @@ import collections
 import classes.combat_scoreboard as st
 import re
 import uuid
+from classes.ship_instance import ShipInstance
+
+import definitions.configs
 import definitions.ship_properties as sp
 
 targeting_orders = {
@@ -39,6 +42,7 @@ class Ship:
 
     # instances
     instances = []
+    tactics_targets = {}  # Previous targets
 
     def __init__(self, fleet=None):
         self.stats = collections.OrderedDict({
@@ -51,14 +55,23 @@ class Ship:
             sp.stat_slots: '',
             sp.stat_aegis: 0,
             sp.stat_targeting: [],
-            sp.stat_ai: sp.ai_default
+            sp.stat_tactics: definitions.configs.ai_default,
+            sp.stat_overload: 1,
+            sp.stat_devastate: 1,
         })
         self.class_id = uuid.uuid4()
         self.fleet = fleet
         self.combat_scorecard = {}
+        self.tactics_targets = {}
 
     def get_side(self):
         return self.fleet.side
+
+    def get_stat(self, stat_name: str):
+        if stat_name in self.stats:
+            return self.stats[stat_name]
+        else:
+            return 0
 
     def parse_statblock(self, statblock: str):
         stats = statblock.split('\n')
@@ -116,7 +129,7 @@ class Ship:
                 self.stats[key] = val
 
         if len(self.stats[sp.stat_targeting]) == 0:
-            self.stats[sp.stat_targeting] = targeting_orders[self.hull_subtype]
+            self.stats[sp.stat_targeting] = sp.targeting_orders[self.hull_subtype]
 
         self.prepare_derived_stats()
         self.initialise_instances(current_hulls=current_hulls, quantity=quantity)
@@ -156,13 +169,8 @@ class Ship:
         instances = []
         ship_id = 1
         for current_hull in current_hulls:
-            instance = {
-                sp.stat_current_hull: current_hull,
-                sp.stat_saturation: self.stats[sp.stat_saturation],
-                'name': self.fleet.fleet_name + ' ' + self.short_name + ' #' + str(ship_id),
-                'ship': self,
-                'ship_id': uuid.uuid4()
-            }
+            ship_name = self.fleet.fleet_name + ' ' + self.short_name + ' #' + str(ship_id)
+            instance = ShipInstance(ship=self, name=ship_name, current_hull=current_hull)
             instances.append(instance)
             ship_id += 1
         self.instances = instances
@@ -200,7 +208,7 @@ class Ship:
 
             stat_strings.append(stat.title() + ': ' + stat_string)
 
-        hull_counter = collections.Counter([instance[sp.stat_current_hull] for instance in self.instances])
+        hull_counter = collections.Counter([instance.get_hull() for instance in self.instances])
         hull_string = ', '.join([str(hull_counter[hull]) + 'x ' + str(hull) for hull in hull_counter if hull > 0])
         stat_strings.append(sp.stat_current_hull.title() + ': ' + hull_string)
 
@@ -209,9 +217,9 @@ class Ship:
                + '\n'.join(stat_strings)
 
     def generate_summary(self):
-        quantity = len([inst for inst in self.instances if inst[sp.stat_current_hull] > 0])
+        quantity = len([instance for instance in self.instances if instance.get_hull() > 0])
         hull_counter = collections.Counter(
-            [instance[sp.stat_current_hull] for instance in self.instances if instance[sp.stat_current_hull] > 0])
+            [instance.get_hull() for instance in self.instances if instance.get_hull() > 0])
         hull_string = ', '.join([str(hull_counter[hull]) + 'x ' + str(hull) for hull in hull_counter]) or 'None Left'
 
         return self.class_name + ' [' + self.hull_full_type + '] x' + str(quantity) + ' - ' + str(
@@ -219,4 +227,12 @@ class Ship:
             self.combat_value) + ' ea.)' + ' - ' + sp.stat_hull.capitalize() + ': ' + hull_string
 
     def quantity(self):
-        return len([inst for inst in self.instances if inst[sp.stat_current_hull] > 0])
+        return len([inst for inst in self.instances if inst.get_hull() > 0])
+
+    def add_target(self, target, damage, pr_hit):
+        ship_id = target.get_id()
+
+        if ship_id not in self.tactics_targets:
+            self.tactics_targets[ship_id] = 0
+
+        self.tactics_targets[ship_id] += damage * pr_hit

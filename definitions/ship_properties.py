@@ -37,7 +37,7 @@ stat_hull = 'hull'
 stat_slots = 'slot'
 stat_aegis = 'aegis'
 stat_targeting = 'targeting order'
-stat_ai = 'tactics'
+stat_tactics = 'tactics'
 stat_overload = 'overload'
 stat_devastate = 'devastate'
 stat_current_hull = 'current hull'
@@ -54,5 +54,4 @@ targeting_orders = {
 
 hull_types = [size_drone, size_destroyer, size_cruiser, size_capital]
 
-ai_default = ai_bully
 ai_types = [ai_bully, ai_saturate, ai_random]
