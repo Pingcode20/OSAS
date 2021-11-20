@@ -49,15 +49,15 @@ class Battle:
                     self.all_ships.update({ship.get_id(): ship for ship in ship_list})
                     self.ships_by_side[side][ship_type].extend(ship_list)
                     self.target_weight_by_side[side][ship_type].extend(
-                        [ship.get_ship_class().target_weight for ship in ship_list])
+                        [ship.get_ship().target_weight for ship in ship_list])
 
     def attack(self, attacker, defender, enemies):
         current_round = self.current_round
         current_range = bp.ranges[current_round]
 
         # Get attack value
-        defender_type = str.lower(defender.get_ship_class().hull_type)
-        attack_lines = attacker.get_ship_class().stats['attack']
+        defender_type = str.lower(defender.get_ship().hull_type)
+        attack_lines = attacker.get_ship().stats['attack']
 
         if defender_type in attack_lines:
             attack_value = attack_lines[defender_type][current_range]
@@ -67,7 +67,7 @@ class Battle:
         if attack_value == 0: return  # 0 attack means 0 impact
 
         # Get defence value
-        defence_value = defender.get_ship_class().stats[sp.stat_defence]
+        defence_value = defender.get_ship().stats[sp.stat_defence]
 
         # Roll 1d20+attack vs defence+10
         roll = random.randint(1, 20)
@@ -83,17 +83,17 @@ class Battle:
             damage = 0
 
         if damage:
-            attacker.get_ship_class().update_scorecard(current_round, st.hits, 1)
-            attacker.get_ship_class().update_scorecard(current_round, st.damage, damage)
-            attacker.get_ship_class().add_target(defender, damage, pr_hit)
+            attacker.get_ship().update_scorecard(current_round, st.hits, 1)
+            attacker.get_ship().update_scorecard(current_round, st.damage, damage)
+            attacker.get_ship().add_target(defender, damage, pr_hit)
         else:
-            attacker.get_ship_class().update_scorecard(current_round, st.misses, 1)
-            defender.get_ship_class().update_scorecard(current_round, st.defence, attack_value ** 2)
+            attacker.get_ship().update_scorecard(current_round, st.misses, 1)
+            defender.get_ship().update_scorecard(current_round, st.defence, attack_value ** 2)
 
         # Inflict damage
-        attacker.get_ship_class().update_scorecard(current_round, st.attack, damage * defence_value ** 2)
+        attacker.get_ship().update_scorecard(current_round, st.attack, damage * defence_value ** 2)
         defender.damage(damage)
-        defender.get_ship_class().update_scorecard(current_round, st.hull_loss, damage)
+        defender.get_ship().update_scorecard(current_round, st.hull_loss, damage)
         self.add_combat_event(
             battle_event.AttackEvent(attacker.get_name(), defender.get_name(), attack_value, defence_value, damage, roll))
 
@@ -103,7 +103,7 @@ class Battle:
             self.add_combat_event(battle_event.SaturationEvent(defender.get_name()))
             defender.damage(1)
             defender.reset_saturation()  # Reset saturation after hit
-            defender.get_ship_class().update_scorecard(current_round, st.saturation, 1)
+            defender.get_ship().update_scorecard(current_round, st.saturation, 1)
 
         if defender.get_hull() <= 0:
             self.destroy_ship(defender)
@@ -113,13 +113,13 @@ class Battle:
             self.current_round = current_round
 
             all_ships = list(self.all_ships.values())
-            initiative_list = weighted_shuffle(all_ships, [ship.get_ship_class().initiative for ship in all_ships])
+            initiative_list = weighted_shuffle(all_ships, [ship.get_ship().initiative for ship in all_ships])
 
             for active_ship in initiative_list:
                 if active_ship.get_hull() <= 0: continue  # Dead ships don't act
-                ship = active_ship.get_ship_class()
+                ship = active_ship.get_ship()
 
-                if active_ship.get_ship_class().fleet.side == bp.side_a:
+                if active_ship.get_ship().fleet.side == bp.side_a:
                     enemies = self.ships_by_side[bp.side_b]
                     target_weights = self.target_weight_by_side[bp.side_b]
                 else:
@@ -132,7 +132,7 @@ class Battle:
                     self.attack(attacker=active_ship, defender=defender, enemies=enemies)
 
                 # AEGIS attacks
-                for a in range(0, active_ship.get_ship_class().stats[sp.stat_aegis]):
+                for a in range(0, active_ship.get_ship().stats[sp.stat_aegis]):
                     defender = find_random_target(enemies, target_weights, [sp.size_drone])
                     if defender:
                         self.attack(attacker=active_ship, defender=defender, enemies=enemies)
@@ -168,8 +168,8 @@ class Battle:
         self.events[self.current_round].append(event)
 
     def destroy_ship(self, ship, index=None):
-        side = ship.get_ship_class().get_side()
-        hull_type = ship.get_ship_class().hull_type
+        side = ship.get_ship().get_side()
+        hull_type = ship.get_ship().hull_type
         ship_list = self.ships_by_side[side][hull_type]
         index = index or ship_list.index(ship)
 
@@ -178,7 +178,7 @@ class Battle:
         del self.target_weight_by_side[side][hull_type][index]
         del self.all_ships[ship.get_id()]
         self.destroyed_ships[self.current_round].append(ship)
-        ship.get_ship_class().update_scorecard(self.current_round, st.losses, 1)
+        ship.get_ship().update_scorecard(self.current_round, st.losses, 1)
 
     def report_summary(self):
         report = ''
@@ -218,7 +218,7 @@ class Battle:
 
         destroyed_ships = self.destroyed_ships[current_round]
         losses_counter = collections.Counter(
-            [ship.get_ship_class().fleet.fleet_name + ' ' + ship.get_ship_class().class_name for ship in destroyed_ships])
+            [ship.get_ship().fleet.fleet_name + ' ' + ship.get_ship().class_name for ship in destroyed_ships])
         if len(losses_counter) > 0:
             losses = []
             for lost_ship in losses_counter:

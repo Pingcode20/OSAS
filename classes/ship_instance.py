@@ -24,8 +24,17 @@ class ShipInstance:
     def get_id(self):
         return self.ship_id
 
-    def get_ship_class(self):
+    def get_ship(self):
         return self.ship
+
+    def get_hull_type(self):
+        return self.ship.hull_type
+
+    def get_target_weight(self):
+        return self.ship.target_weight
+
+    def get_side(self):
+        return self.ship.get_side()
 
     def get_name(self):
         return self.name
