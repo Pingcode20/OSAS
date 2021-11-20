@@ -4,9 +4,9 @@ from classes.ship import default_attack_type, hull_types
 from classes.fleet import Fleet
 import classes.battle_event as battle_event
 import classes.combat_scoreboard as st
-from definitions import ranges, OUTPUT_DIR
+from definitions.paths import ranges
 from util import weighted_shuffle
-import os
+import definitions.ship_properties as sp
 
 side_a = 'A'
 side_b = 'B'
@@ -69,8 +69,9 @@ class Battle:
         current_range = ranges[current_round]
 
         # Get attack value
-        defender_type = defender['ship'].hull_type
+        defender_type = str.lower(defender['ship'].hull_type)
         attack_lines = attacker['ship'].stats['attack']
+
         if defender_type in attack_lines:
             attack_value = attack_lines[defender_type][current_range]
         else:
@@ -102,7 +103,7 @@ class Battle:
 
         # Inflict damage
         attacker['ship'].update_scorecard(current_round, st.attack, damage * defence_value ** 2)
-        defender['current_hull'] -= damage
+        defender[sp.stat_current_hull] -= damage
         defender['ship'].update_scorecard(current_round, st.hull_loss, damage)
         self.add_combat_event(
             battle_event.AttackEvent(attacker['name'], defender['name'], attack_value, defence_value, damage, roll))
@@ -111,11 +112,11 @@ class Battle:
         defender['saturation'] -= 1
         if defender['saturation'] <= 0:
             self.add_combat_event(battle_event.SaturationEvent(defender['name']))
-            defender['current_hull'] -= 1
+            defender[sp.stat_current_hull] -= 1
             defender['saturation'] = defender['ship'].stats['saturation']  # Reset saturation after hit
             defender['ship'].update_scorecard(current_round, st.saturation, 1)
 
-        if defender['current_hull'] <= 0:
+        if defender[sp.stat_current_hull] <= 0:
             self.destroy_ship(defender)
 
     def simulate_battle(self):
@@ -126,7 +127,7 @@ class Battle:
             initiative_list = weighted_shuffle(all_ships, [ship['ship'].initiative for ship in all_ships])
 
             for active_ship in initiative_list:
-                if active_ship['current_hull'] <= 0: continue  # Dead ships don't act
+                if active_ship[sp.stat_current_hull] <= 0: continue  # Dead ships don't act
                 ship = active_ship['ship']
 
                 if active_ship['ship'].fleet.side == side_a:
@@ -168,7 +169,11 @@ class Battle:
                 self.add_combat_event(
                     battle_event.BattleEndEvent([fleet.fleet_name for fleet in self.sides[winning_side]]))
                 self.final_round = current_round
-                break
+                return
+
+        # Default to no winners
+        self.add_combat_event(battle_event.BattleEndEvent([]))
+        self.final_round = current_round
 
     def add_combat_event(self, event):
         self.events[self.current_round].append(event)
@@ -184,7 +189,7 @@ class Battle:
         del self.target_weight_by_side[side][hull_type][index]
         del self.all_ships[ship['ship_id']]
         self.destroyed_ships[self.current_round].append(ship)
-        ship['ship'].update_scorecard(self.current_round,st.losses,1)
+        ship['ship'].update_scorecard(self.current_round, st.losses, 1)
 
     def report_summary(self):
         report = ''
@@ -247,32 +252,3 @@ class Battle:
             report += '\n'
 
         return report
-
-
-if __name__ == '__main__':
-    random.seed(5555)
-
-    fleet1_filename = 'unifiedfleet.txt'
-    fleet2_filename = 'gorn.txt'
-
-    battle = Battle()
-    battle.load_fleet(side=side_a, fleet_filename=fleet1_filename)
-    battle.load_fleet(side=side_b, fleet_filename=fleet2_filename)
-
-    battle.initialise_battle()
-    battle.simulate_battle()
-
-    f = open(os.path.join(OUTPUT_DIR,'test_battle.txt'), 'w')
-    f.write(battle.report_summary())
-    f.close()
-
-    f = open(os.path.join(OUTPUT_DIR,'test_battle_verbose.txt'), 'w')
-    f.write(battle.report_verbose())
-    f.close()
-
-    for side in battle.sides.values():
-        for participating_fleet in side:
-            f = open(os.path.join(OUTPUT_DIR,participating_fleet.fleet_name + ' - Post-Battle.txt'),'w')
-            f.write(participating_fleet.generate_fleet_oob())
-            f.close()
-

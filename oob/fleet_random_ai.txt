@@ -1,0 +1,12 @@
+Fleet A
+
+Attacker-class [Destroyer]
+Quantity: 30
+Attack: 10/10/10/10
+Defense: 10
+Saturation: 3
+Speed: 8
+Jump: 5
+Hull: 20
+Slots: 3 [Missiles x1, AEGIS x1, Heavy Screens x1]
+Tactics: Random

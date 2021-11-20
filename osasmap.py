@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import random
 import util
 import os
-from definitions import MAP_DIR
+from definitions.paths import MAP_DIR
 from pathlib import Path
 
 

@@ -1,0 +1,11 @@
+Fleet B
+
+Defender-class [Destroyer]
+Quantity: 30
+Attack: 0/0/0/0
+Defense: 10
+Saturation: 3
+Speed: 8
+Jump: 5
+Hull: 20
+Slots: 3 [Missiles x1, AEGIS x1, Heavy Screens x1]
