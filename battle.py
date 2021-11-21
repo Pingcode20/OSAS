@@ -2,6 +2,8 @@ import collections
 import random
 from classes.ship import default_attack_type, hull_types
 from classes.fleet import Fleet
+from classes.ship_manager import ShipManager
+from classes.ship_instance import ShipInstance
 import classes.battle_event as battle_event
 import classes.combat_scoreboard as st
 import definitions.battle_properties as bp
@@ -11,63 +13,54 @@ import definitions.ship_properties as sp
 
 
 class Battle:
-    sides = {
-        bp.side_a: [],
-        bp.side_b: []
-    }
+    sm: ShipManager
 
-    fleets = []
+    sides: dict
+    fleets: list = []
 
-    ships_by_side = {}
-    target_weight_by_side = {}
-    all_ships = {}
+    destroyed_ships: dict
+    events: dict
 
-    destroyed_ships = {rnd: [] for rnd in range(0, len(bp.ranges))}
-    events = {rnd: [] for rnd in range(0, len(bp.ranges))}
+    current_round: int
+    final_round: int
 
-    current_round = 0
-    final_round = 0
+    def __init__(self):
+        self.sides = {
+            bp.side_a: [],
+            bp.side_b: []
+        }
+
+        self.fleets = []
+        self.sm = ShipManager()
+
+        self.destroyed_ships = {rnd: [] for rnd in range(0, len(bp.ranges))}
+        self.events = {rnd: [] for rnd in range(0, len(bp.ranges))}
+
+        self.current_round = 0
+        self.final_round = 0
 
     # Only supports Side A and Side B for now
     def load_fleet(self, side, fleet_filename):
         fleet = Fleet(side=side, fleet_filename=fleet_filename)
         self.sides[side].append(fleet)
         self.fleets.append(fleet)
+        self.sm.add_fleet(fleet)
 
     def initialise_battle(self):
-        self.ships_by_side = {}
-        self.all_ships = {}
+        pass
 
-        for side in self.sides:
-            self.ships_by_side[side] = {hull_type: [] for hull_type in hull_types}
-            self.target_weight_by_side[side] = {hull_type: [] for hull_type in hull_types}
-
-            for fleet in self.sides[side]:
-                ships_by_type = fleet.generate_combat_list()
-                for ship_type in ships_by_type:
-                    ship_list = ships_by_type[ship_type]
-                    self.all_ships.update({ship.get_id(): ship for ship in ship_list})
-                    self.ships_by_side[side][ship_type].extend(ship_list)
-                    self.target_weight_by_side[side][ship_type].extend(
-                        [ship.get_ship().target_weight for ship in ship_list])
-
-    def attack(self, attacker, defender, enemies):
+    def attack(self, attacker: ShipInstance, defender: ShipInstance):
         current_round = self.current_round
         current_range = bp.ranges[current_round]
 
         # Get attack value
-        defender_type = str.lower(defender.get_ship().hull_type)
-        attack_lines = attacker.get_ship().stats['attack']
-
-        if defender_type in attack_lines:
-            attack_value = attack_lines[defender_type][current_range]
-        else:
-            attack_value = attack_lines[default_attack_type][current_range]
+        defender_type = defender.get_hull_type()
+        attack_value = attacker.get_attack_for_hull_type(defender_type, current_range)
 
         if attack_value == 0: return  # 0 attack means 0 impact
 
         # Get defence value
-        defence_value = defender.get_ship().stats[sp.stat_defence]
+        defence_value = defender.get_stat(sp.stat_defence)
 
         # Roll 1d20+attack vs defence+10
         roll = random.randint(1, 20)
@@ -106,36 +99,32 @@ class Battle:
             defender.get_ship().update_scorecard(current_round, st.saturation, 1)
 
         if defender.get_hull() <= 0:
-            self.destroy_ship(defender)
+            self.sm.destroy(defender)
 
     def simulate_battle(self):
         for current_round in range(0, len(bp.ranges)):
             self.current_round = current_round
 
-            all_ships = list(self.all_ships.values())
-            initiative_list = weighted_shuffle(all_ships, [ship.get_ship().initiative for ship in all_ships])
+            all_ships = list(self.sm.get_all_ships())
+            initiative_list: list[ShipInstance] = weighted_shuffle(all_ships, [instance.get_initiative() for instance in
+                                                                               all_ships])
 
             for active_ship in initiative_list:
                 if active_ship.get_hull() <= 0: continue  # Dead ships don't act
-                ship = active_ship.get_ship()
-
-                if active_ship.get_ship().fleet.side == bp.side_a:
-                    enemies = self.ships_by_side[bp.side_b]
-                    target_weights = self.target_weight_by_side[bp.side_b]
-                else:
-                    enemies = self.ships_by_side[bp.side_a]
-                    target_weights = self.target_weight_by_side[bp.side_a]
 
                 # Primary attack
-                defender = find_random_target(enemies, target_weights, ship.stats[sp.stat_targeting])
+                defender = find_random_target(self.sm, active_ship)
+
                 if defender:
-                    self.attack(attacker=active_ship, defender=defender, enemies=enemies)
+                    if not self.sm.exists(defender.get_id()):
+                        pass
+                    self.attack(attacker=active_ship, defender=defender)
 
                 # AEGIS attacks
-                for a in range(0, active_ship.get_ship().stats[sp.stat_aegis]):
-                    defender = find_random_target(enemies, target_weights, [sp.size_drone])
+                for a in range(0, active_ship.get_stat(sp.stat_aegis)):
+                    defender = find_random_target(self.sm, active_ship, [sp.size_drone])
                     if defender:
-                        self.attack(attacker=active_ship, defender=defender, enemies=enemies)
+                        self.attack(attacker=active_ship, defender=defender)
 
             # Post-exchange
             for side in self.sides:
@@ -145,16 +134,9 @@ class Battle:
                         ship.update_scorecard(current_round, st.quantity, ship.quantity())
 
             # Test if anyone has won
-            winning_side = None
-            fleets_with_ships_left = 0
-            for side in self.ships_by_side:
-                for ship_type in self.ships_by_side[side]:
-                    if len(self.ships_by_side[side][ship_type]) > 1:
-                        fleets_with_ships_left += 1
-                        winning_side = side
-                        break
-
-            if fleets_with_ships_left <= 1:
+            survivor_counts = self.sm.get_survivor_counts()
+            if len(survivor_counts) == 1:
+                winning_side = survivor_counts.keys()[0]
                 self.add_combat_event(
                     battle_event.BattleEndEvent([fleet.fleet_name for fleet in self.sides[winning_side]]))
                 self.final_round = current_round

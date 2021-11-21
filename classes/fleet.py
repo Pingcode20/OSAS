@@ -65,6 +65,9 @@ class Fleet:
 
         return '\n'.join(sorted(scoreboard_strings))
 
+    def get_side(self):
+        return self.side
+
 
 if __name__ == '__main__':
     fleet = Fleet(fleet_filename='extended_hullcount_test.txt', side='Side A')
