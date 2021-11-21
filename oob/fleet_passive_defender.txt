@@ -1,4 +1,4 @@
-Fleet B
+Target Fleet
 
 Defender-class [Destroyer]
 Quantity: 30

@@ -1,13 +1,13 @@
 import collections
 import random
-from classes.ship import default_attack_type, hull_types
 from classes.fleet import Fleet
 from classes.ship_manager import ShipManager
 from classes.ship_instance import ShipInstance
 import classes.battle_event as battle_event
 import classes.combat_scoreboard as st
 import definitions.battle_properties as bp
-from functions.target import find_random_target
+import definitions.configs as conf
+import functions.target as targeting
 from util import weighted_shuffle
 import definitions.ship_properties as sp
 
@@ -57,7 +57,8 @@ class Battle:
         defender_type = defender.get_hull_type()
         attack_value = attacker.get_attack_for_hull_type(defender_type, current_range)
 
-        if attack_value == 0: return  # 0 attack means 0 impact
+        if attack_value == 0:
+            return  # 0 attack means 0 impact
 
         # Get defence value
         defence_value = defender.get_stat(sp.stat_defence)
@@ -78,7 +79,7 @@ class Battle:
         if damage:
             attacker.get_ship().update_scorecard(current_round, st.hits, 1)
             attacker.get_ship().update_scorecard(current_round, st.damage, damage)
-            attacker.get_ship().add_target(defender, damage, pr_hit)
+            attacker.get_ship().add_target(target=defender, damage=damage, pr_hit=pr_hit)
         else:
             attacker.get_ship().update_scorecard(current_round, st.misses, 1)
             defender.get_ship().update_scorecard(current_round, st.defence, attack_value ** 2)
@@ -88,7 +89,8 @@ class Battle:
         defender.damage(damage)
         defender.get_ship().update_scorecard(current_round, st.hull_loss, damage)
         self.add_combat_event(
-            battle_event.AttackEvent(attacker.get_name(), defender.get_name(), attack_value, defence_value, damage, roll))
+            battle_event.AttackEvent(attacker.get_name(), defender.get_name(), attack_value, defence_value, damage,
+                                     roll))
 
         # Calculate saturation
         defender_sat_remaining = defender.saturate(attacker.get_stat(sp.stat_overload))
@@ -100,29 +102,36 @@ class Battle:
 
         if defender.get_hull() <= 0:
             self.sm.destroy(defender)
+            self.add_combat_event(battle_event.DestroyedEvent(defender.get_name()))
+            self.destroyed_ships[self.current_round].append(defender)
+            defender.get_ship().update_scorecard(self.current_round, st.losses, 1)
 
     def simulate_battle(self):
         for current_round in range(0, len(bp.ranges)):
             self.current_round = current_round
 
-            all_ships = list(self.sm.get_all_ships())
-            initiative_list: list[ShipInstance] = weighted_shuffle(all_ships, [instance.get_initiative() for instance in
-                                                                               all_ships])
+            all_ships = self.sm.get_all_ships()
+            initiative_list: list[ShipInstance] = weighted_shuffle(all_ships,
+                                                                   [instance.get_initiative() for instance in
+                                                                    all_ships],
+                                                                   reverse=True)
 
             for active_ship in initiative_list:
-                if active_ship.get_hull() <= 0: continue  # Dead ships don't act
+                if active_ship.is_dead(): continue  # Dead ships don't act
 
                 # Primary attack
-                defender = find_random_target(self.sm, active_ship)
+                # Check tactics
+                if random.random() < conf.ai_tactic_chance:
+                    defender = targeting.find_target_bully(self.sm, active_ship)
+                else:
+                    defender = targeting.find_target_priority_list(self.sm, active_ship)
 
-                if defender:
-                    if not self.sm.exists(defender.get_id()):
-                        pass
+                if defender:  # If a target was found
                     self.attack(attacker=active_ship, defender=defender)
 
                 # AEGIS attacks
                 for a in range(0, active_ship.get_stat(sp.stat_aegis)):
-                    defender = find_random_target(self.sm, active_ship, [sp.size_drone])
+                    defender = targeting.find_target_hull_type(self.sm, active_ship, sp.size_drone)
                     if defender:
                         self.attack(attacker=active_ship, defender=defender)
 
@@ -136,11 +145,15 @@ class Battle:
             # Test if anyone has won
             survivor_counts = self.sm.get_survivor_counts()
             if len(survivor_counts) == 1:
-                winning_side = survivor_counts.keys()[0]
+                winning_side = list(survivor_counts.keys())[0]
                 self.add_combat_event(
                     battle_event.BattleEndEvent([fleet.fleet_name for fleet in self.sides[winning_side]]))
                 self.final_round = current_round
                 return
+
+            # Reset Saturation
+            for ship in all_ships:
+                ship.reset_saturation()
 
         # Default to no winners
         self.add_combat_event(battle_event.BattleEndEvent([]))

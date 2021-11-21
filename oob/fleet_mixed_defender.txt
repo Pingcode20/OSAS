@@ -1,0 +1,31 @@
+Mixed Target Fleet
+
+Defender-class [Destroyer]
+Quantity: 30
+Attack: 0/0/0/0
+Defense: 10
+Saturation: 100
+Speed: 8
+Jump: 5
+Hull: 20
+Slots: 3 [Missiles x1, AEGIS x1, Heavy Screens x1]
+
+Weak Defender-class [Destroyer]
+Quantity: 30
+Attack: 0/0/0/0
+Defense: 0
+Saturation: 100
+Speed: 8
+Jump: 5
+Hull: 20
+Slots: 3 [Missiles x1, AEGIS x1, Heavy Screens x1]
+
+Hardened Defender-class [Destroyer]
+Quantity: 30
+Attack: 0/0/0/0
+Defense: 20
+Saturation: 100
+Speed: 8
+Jump: 5
+Hull: 20
+Slots: 3 [Missiles x1, AEGIS x1, Heavy Screens x1]

@@ -9,7 +9,7 @@ if __name__ == '__main__':
 
     battle_name = 'bully_battle'
     fleet1_filename = 'fleet_bully.txt'
-    fleet2_filename = 'fleet_passive_defender.txt'
+    fleet2_filename = 'fleet_mixed_defender.txt'
 
     battle_instance = battle.Battle()
     battle_instance.load_fleet(side=definitions.battle_properties.side_a, fleet_filename=fleet1_filename)

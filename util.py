@@ -22,9 +22,12 @@ def rect_vector(a, b):
 
 # Weighted Random Shuffle
 # http://utopia.duth.gr/~pefraimi/research/data/2007EncOfAlg.pdf
-def weighted_shuffle(items, weights):
+def weighted_shuffle(items, weights, reverse=False) -> list:
     order = sorted(range(len(items)), key=lambda i: random.random() ** (1.0 / weights[i]))
-    return [items[i] for i in order]
+    result = [items[i] for i in order]
+    if reverse:
+        result.reverse()
+    return result
 
 
 if __name__ == '__main__':

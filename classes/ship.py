@@ -41,8 +41,8 @@ class Ship:
     target_weight = 0
 
     # instances
-    instances = []
-    tactics_targets = {}  # Previous targets
+    instances: list
+    tactics_targets: dict  # Previous targets
 
     def __init__(self, fleet=None):
         self.stats = collections.OrderedDict({
@@ -111,7 +111,7 @@ class Ship:
                 attack_type = attack_match.groups()[1] or default_attack_type
                 attack_values = list(map(str.strip, val.split('/')))
                 self.stats[sp.stat_attack][attack_type] = [int(x) for x in attack_values]
-            elif key == sp.stat_current_hull:
+            elif key == sp.stat_slots:
                 self.parse_special_modules(val)
                 self.stats[key] = val
             elif key == sp.stat_targeting:
@@ -229,10 +229,16 @@ class Ship:
     def quantity(self):
         return len([inst for inst in self.instances if inst.get_hull() > 0])
 
-    def add_target(self, target, damage, pr_hit):
-        ship_id = target.get_id()
+    def add_target(self, target: ShipInstance, damage: int, pr_hit: float):
+        if target not in self.tactics_targets:
+            self.tactics_targets[target] = 0
 
-        if ship_id not in self.tactics_targets:
-            self.tactics_targets[ship_id] = 0
+        self.tactics_targets[target] += damage * pr_hit
 
-        self.tactics_targets[ship_id] += damage * pr_hit
+    def get_targets(self):
+        # Clean any stale targets
+        for target in list(self.tactics_targets.keys()):
+            if target.is_dead():
+                del self.tactics_targets[target]
+
+        return self.tactics_targets

@@ -2,7 +2,7 @@ Fleet A
 
 Attacker-class [Destroyer]
 Quantity: 30
-Attack: 10/10/10/10
+Attack: 11/11/11/11
 Defense: 10
 Saturation: 3
 Speed: 8

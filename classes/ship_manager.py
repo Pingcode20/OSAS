@@ -63,17 +63,26 @@ class ShipManager:
         # Ensure side is initialised
         self.initialise_side(side)
 
-        # Add ship to ally lists
-        self.all_ships[ship_id] = instance
-        self.allies_by_side[side][sp.size_any][ship_id] = instance
-        self.allies_by_side[side][hull_type][ship_id] = instance
-        self.allies_target_weight_by_side[side][sp.size_any][ship_id] = instance.get_target_weight()
-        self.allies_target_weight_by_side[side][hull_type][ship_id] = instance.get_target_weight()
+        # Lists to add ships
+        ship_lists = [self.allies_by_side[side]] + \
+                     [self.enemies_by_side[opponent] for opponent in self.allies_by_side if opponent != side]
+        target_weight_lists = [self.allies_target_weight_by_side[side]] + \
+                              [self.enemies_target_weight_by_side[opponent] for opponent in self.allies_by_side if
+                               opponent != side]
 
-        # Add ship to enemy lists
-        for opponent in [opponent for opponent in self.allies_by_side if opponent != side]:
-            self.enemies_by_side[opponent][sp.size_any][ship_id] = instance
-            self.enemies_target_weight_by_side[opponent][sp.size_any][ship_id] = instance
+        # Add ship to master list
+        self.all_ships[ship_id] = instance
+
+        # Add ship to instance lists
+        for ship_list in ship_lists:
+            ship_list[sp.size_any][ship_id] = instance
+            ship_list[hull_type][ship_id] = instance
+
+        # Add ship to target weight lists:
+        for target_weight_list in target_weight_lists:
+            target_weight = instance.get_target_weight()
+            target_weight_list[sp.size_any][ship_id] = target_weight
+            target_weight_list[hull_type][ship_id] = target_weight
 
     def add_fleet(self, fleet: Fleet):
         combat_list = fleet.generate_combat_list()
@@ -105,8 +114,8 @@ class ShipManager:
     def exists(self, ship_id: uuid) -> bool:
         return ship_id in self.all_ships
 
-    def get_all_ships(self) -> dict:
-        return self.all_ships.values()
+    def get_all_ships(self) -> list[ShipInstance]:
+        return list(self.all_ships.values())
 
     def get_ship_by_id(self, ship_id: uuid) -> ShipInstance:
         return self.all_ships[ship_id]
@@ -120,8 +129,10 @@ class ShipManager:
     def get_ship_enemies_by_type(self, instance: ShipInstance, hull_type: str) \
             -> tuple[list[ShipInstance], list[ShipInstance]]:
         side = instance.get_side()
-        return list(self.enemies_by_side[side][hull_type].values()), \
-               list(self.enemies_target_weight_by_side[side][hull_type].values())
+        enemies = list(self.enemies_by_side[side][hull_type].values())
+        enemies_target_weights = list(self.enemies_target_weight_by_side[side][hull_type].values())
+
+        return enemies, enemies_target_weights
 
     def generate_initiative_list(self) -> list:
         instances = [instance for instance in self.all_ships]

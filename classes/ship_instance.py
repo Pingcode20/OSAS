@@ -52,8 +52,14 @@ class ShipInstance:
         else:
             return attack_lines[sp.attack_type_any][current_range]
 
+    def get_tactics_target_list(self):
+        return self.ship.tactics_targets
+
     def get_hull(self):
         return self.current_hull
+
+    def is_dead(self):
+        return self.current_hull <= 0
 
     def damage(self, damage: int):
         self.current_hull -= damage
