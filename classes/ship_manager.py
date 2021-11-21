@@ -2,9 +2,10 @@
 from classes.ship_instance import ShipInstance
 import definitions.battle_properties as bp
 import definitions.ship_properties as sp
+import uuid
+
 
 class ShipManager:
-
     all_ships: dict
 
     ships_by_side: dict = {}
@@ -14,6 +15,7 @@ class ShipManager:
         self.all_ships = {}
         self.ships_by_side = {}
         self.target_weight_by_side = {}
+
         for side in bp.sides:
             self.ships_by_side[side] = {}
             self.target_weight_by_side[side] = {}
@@ -23,12 +25,30 @@ class ShipManager:
                 self.ships_by_side[side][hull_type] = {}
                 self.target_weight_by_side[side][hull_type] = {}
 
-    def add(self, instance: ShipInstance):
-        id = instance.get_id()
+    def add(self, instance: ShipInstance) -> None:
+        ship_id = instance.get_id()
         side = instance.get_side()
         hull_type = instance.get_hull_type()
-        self.all_ships[id] = instance
-        self.ships_by_side[side][sp.size_any][id] = instance
-        self.ships_by_side[side][hull_type][id] = instance
-        self.target_weight_by_side[side][sp.size_any][id] = instance.get_target_weight()
-        self.target_weight_by_side[side][hull_type][id] = instance.get_target_weight()
+
+        self.all_ships[ship_id] = instance
+        self.ships_by_side[side][sp.size_any][ship_id] = instance
+        self.ships_by_side[side][hull_type][ship_id] = instance
+        self.target_weight_by_side[side][sp.size_any][ship_id] = instance.get_target_weight()
+        self.target_weight_by_side[side][hull_type][ship_id] = instance.get_target_weight()
+
+    def destroy(self, instance: ShipInstance) -> None:
+        ship_id = self.get_id()
+        side = instance.get_side()
+        hull_type = instance.get_hull_type()
+
+        del self.all_ships[ship_id]
+        del self.ships_by_side[side][sp.size_any][ship_id]
+        del self.ships_by_side[side][hull_type][ship_id]
+        del self.target_weight_by_side[side][sp.size_any][ship_id]
+        del self.target_weight_by_side[side][hull_type][ship_id]
+
+    def exists(self, ship_id: uuid) -> bool:
+        return ship_id in self.all_ships
+
+    def get(self, ship_id: uuid) -> ShipInstance:
+        return self.all_ships[ship_id]

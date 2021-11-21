@@ -1,9 +1,7 @@
 # Ship constant definitions
 
-# Weight class for any ship
-size_any = 'Any'
-
 # Weight classes
+size_any = 'Any'
 size_drone = 'Drone'
 size_destroyer = 'Destroyer'
 size_cruiser = 'Cruiser'
